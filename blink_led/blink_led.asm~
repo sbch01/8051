@@ -1,3 +1,6 @@
+;Source: https://www.circuitstoday.com/blinking-led-using-8051
+
+
 START: CPL P1.0
        ACALL WAIT  
        SJMP START
