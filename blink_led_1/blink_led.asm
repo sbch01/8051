@@ -1,0 +1,33 @@
+;Source: https://www.circuitstoday.com/blinking-led-using-8051
+
+
+ORG	0000H
+	SJMP START
+;ORG 	000BH
+;	SJMP TMR0_INTR
+;ORG	001BH
+;	SJMP TMR1_INTR
+;ORG	0003H
+;	SJMP INT0_INTR
+;ORG	0013H
+;	SJMP INT1_INTR
+;ORG	0023H
+;	SJMP UART_INT
+	
+
+ORG	0030H
+START: CPL P1.0
+       ACALL WAIT  
+       SJMP START
+ORG	0100H
+WAIT:  MOV R4,#05H
+WAIT1: MOV R3,#05H
+WAIT2: MOV R2,#05H
+WAIT3: DJNZ R2,WAIT3
+       DJNZ R3,WAIT2
+       DJNZ R4,WAIT1
+       RET
+
+
+       END
+       

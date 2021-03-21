@@ -1,24 +1,45 @@
-blink_led                                                                                                               PAGE 1
-                         1     ;Source: https://www.circuitstoday.com/blinking-led-using-8051
-                         2
-                         3
-0000 B290                4     START: CPL P1.0
-0002 1106                5            ACALL WAIT
-0004 80FA                6            SJMP START
-                         7
-0006 7C05                8     WAIT:  MOV R4,#05H
-0008 7B00                9     WAIT1: MOV R3,#00H
-000A 7A00               10     WAIT2: MOV R2,#00H
-000C DAFE               11     WAIT3: DJNZ R2,WAIT3
-000E DBFA               12            DJNZ R3,WAIT2
-0010 DCF6               13            DJNZ R4,WAIT1
-0012 22                 14            RET
-****WARNING:Missing`END'directive
-ASSEMBLY COMPLETE, NO ERRORS FOUND, 1 WARNING
+test_mov                                                                                                                PAGE 1
+                         1     ORG     0000H
+0000 802E                2             SJMP START
+                         3     ;ORG    000BH   ;ADDRES OF TMRO INTERUPT VECTOR
+                         4     ;       SJMP TMR0_INTR
+                         5     ;ORG    001BH
+                         6     ;       SJMP TMR1_INTR
+                         7     ;ORG    0003H
+                         8     ;       SJMP INT0_INTR
+                         9     ;ORG    0013H
+                        10     ;       SJMP INT1_INTR
+                        11     ;ORG    0023H
+                        12     ;       SJMP UART_INT
+                        13
+  0020                  14      MYBYTE EQU 20H
+                        15
+                        16     ORG     0030H
+0030 740F               17     START:  MOV A,#0FH
+0032 7802               18             MOV R0,#02H
+0034 7903               19             MOV R1,#03H
+0036 7A04               20             MOV R2,#04H
+0038 7B05               21             MOV R3,#05H
+003A 7C06               22             MOV R4,#06H
+003C 7D07               23             MOV R5,#07H
+003E 7E08               24             MOV R6,#08H
+0040 7F09               25             MOV R7,#09H
+                        26
+0042 752012             27             MOV MYBYTE,#12H
+                        28
+0045 C020               29             PUSH MYBYTE
+0047 C004               30             PUSH 04H
+0049 7411               31             MOV A,#11H
+004B C020               32             PUSH 20H
+004D 7400               33             MOV A,#00H
+004F D0E0               34             POP A
+0051 D0E0               35             POP A
+                        36
+0053 00                 37             NOP     ;LOOP HERE
+0054 0153               38             AJMP $-1
+                        39             END
+ASSEMBLY COMPLETE, NO ERRORS FOUND, NO WARNINGS
 
-
-ERROR SUMMARY:
-Line 14, WARNING:Missing`END'directive
 
 SYMBOL TABLE:
 ??MCU_8051_IDE . . . . . . . . . . .  N  NUMB  8051H  NOT USED
@@ -111,11 +132,12 @@ IT1. . . . . . . . . . . . . . . . .  B  ADDR  008AH  NOT USED
 KBE. . . . . . . . . . . . . . . . .  D  ADDR  009DH  NOT USED
 KBF. . . . . . . . . . . . . . . . .  D  ADDR  009EH  NOT USED
 KBLS . . . . . . . . . . . . . . . .  D  ADDR  009CH  NOT USED
+MYBYTE . . . . . . . . . . . . . . .  N  NUMB  0020H
 OSCCON . . . . . . . . . . . . . . .  D  ADDR  0086H  NOT USED
 OV . . . . . . . . . . . . . . . . .  B  ADDR  00D2H  NOT USED
 P. . . . . . . . . . . . . . . . . .  B  ADDR  00D0H  NOT USED
 P0 . . . . . . . . . . . . . . . . .  D  ADDR  0080H  NOT USED
-P1 . . . . . . . . . . . . . . . . .  D  ADDR  0090H
+P1 . . . . . . . . . . . . . . . . .  D  ADDR  0090H  NOT USED
 P1M1 . . . . . . . . . . . . . . . .  D  ADDR  00D4H  NOT USED
 P1M2 . . . . . . . . . . . . . . . .  D  ADDR  00E2H  NOT USED
 P2 . . . . . . . . . . . . . . . . .  D  ADDR  00A0H  NOT USED
@@ -172,7 +194,7 @@ SPDAT. . . . . . . . . . . . . . . .  D  ADDR  00C5H  NOT USED
 SPDR . . . . . . . . . . . . . . . .  D  ADDR  0086H  NOT USED
 SPSR . . . . . . . . . . . . . . . .  D  ADDR  00AAH  NOT USED
 SPSTA. . . . . . . . . . . . . . . .  D  ADDR  00C4H  NOT USED
-START. . . . . . . . . . . . . . . .  C  ADDR  0000H
+START. . . . . . . . . . . . . . . .  C  ADDR  0030H
 T0 . . . . . . . . . . . . . . . . .  B  ADDR  00B4H  NOT USED
 T1 . . . . . . . . . . . . . . . . .  B  ADDR  00B5H  NOT USED
 T2CON. . . . . . . . . . . . . . . .  D  ADDR  00C8H  NOT USED
@@ -198,10 +220,6 @@ TR0. . . . . . . . . . . . . . . . .  B  ADDR  008CH  NOT USED
 TR1. . . . . . . . . . . . . . . . .  B  ADDR  008EH  NOT USED
 TR2. . . . . . . . . . . . . . . . .  B  ADDR  00CAH  NOT USED
 TXD. . . . . . . . . . . . . . . . .  B  ADDR  00B1H  NOT USED
-WAIT . . . . . . . . . . . . . . . .  C  ADDR  0006H
-WAIT1. . . . . . . . . . . . . . . .  C  ADDR  0008H
-WAIT2. . . . . . . . . . . . . . . .  C  ADDR  000AH
-WAIT3. . . . . . . . . . . . . . . .  C  ADDR  000CH
 WDTCON . . . . . . . . . . . . . . .  D  ADDR  00A7H  NOT USED
 WDTPRG . . . . . . . . . . . . . . .  D  ADDR  00A7H  NOT USED
 WDTRST . . . . . . . . . . . . . . .  D  ADDR  00A6H  NOT USED

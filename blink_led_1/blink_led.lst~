@@ -1,24 +1,38 @@
 blink_led                                                                                                               PAGE 1
-                         1     ;This is
+                         1     ;Source: https://www.circuitstoday.com/blinking-led-using-8051
                          2
                          3
-0000 B290                4     START: CPL P1.0
-0002 1106                5            ACALL WAIT
-0004 80FA                6            SJMP START
-                         7
-0006 7C05                8     WAIT:  MOV R4,#05H
-0008 7B00                9     WAIT1: MOV R3,#00H
-000A 7A00               10     WAIT2: MOV R2,#00H
-000C DAFE               11     WAIT3: DJNZ R2,WAIT3
-000E DBFA               12            DJNZ R3,WAIT2
-0010 DCF6               13            DJNZ R4,WAIT1
-0012 22                 14            RET
-****WARNING:Missing`END'directive
-ASSEMBLY COMPLETE, NO ERRORS FOUND, 1 WARNING
+                         4     ORG     0000H
+0000 802E                5             SJMP START
+                         6     ;ORG    000BH
+                         7     ;       SJMP TMR0_INTR
+                         8     ;ORG    001BH
+                         9     ;       SJMP TMR1_INTR
+                        10     ;ORG    0003H
+                        11     ;       SJMP INT0_INTR
+                        12     ;ORG    0013H
+                        13     ;       SJMP INT1_INTR
+                        14     ;ORG    0023H
+                        15     ;       SJMP UART_INT
+                        16
+                        17
+                        18     ORG     0030H
+0030 B290               19     START: CPL P1.0
+0032 3100               20            ACALL WAIT
+0034 80FA               21            SJMP START
+                        22     ORG     0100H
+0100 7C05               23     WAIT:  MOV R4,#05H
+0102 7B00               24     WAIT1: MOV R3,#00H
+0104 7A00               25     WAIT2: MOV R2,#00H
+0106 DAFE               26     WAIT3: DJNZ R2,WAIT3
+0108 DBFA               27            DJNZ R3,WAIT2
+010A DCF6               28            DJNZ R4,WAIT1
+010C 22                 29            RET
+                        30
+                        31
+                        32            END
+ASSEMBLY COMPLETE, NO ERRORS FOUND, NO WARNINGS
 
-
-ERROR SUMMARY:
-Line 14, WARNING:Missing`END'directive
 
 SYMBOL TABLE:
 ??MCU_8051_IDE . . . . . . . . . . .  N  NUMB  8051H  NOT USED
@@ -172,7 +186,7 @@ SPDAT. . . . . . . . . . . . . . . .  D  ADDR  00C5H  NOT USED
 SPDR . . . . . . . . . . . . . . . .  D  ADDR  0086H  NOT USED
 SPSR . . . . . . . . . . . . . . . .  D  ADDR  00AAH  NOT USED
 SPSTA. . . . . . . . . . . . . . . .  D  ADDR  00C4H  NOT USED
-START. . . . . . . . . . . . . . . .  C  ADDR  0000H
+START. . . . . . . . . . . . . . . .  C  ADDR  0030H
 T0 . . . . . . . . . . . . . . . . .  B  ADDR  00B4H  NOT USED
 T1 . . . . . . . . . . . . . . . . .  B  ADDR  00B5H  NOT USED
 T2CON. . . . . . . . . . . . . . . .  D  ADDR  00C8H  NOT USED
@@ -198,10 +212,10 @@ TR0. . . . . . . . . . . . . . . . .  B  ADDR  008CH  NOT USED
 TR1. . . . . . . . . . . . . . . . .  B  ADDR  008EH  NOT USED
 TR2. . . . . . . . . . . . . . . . .  B  ADDR  00CAH  NOT USED
 TXD. . . . . . . . . . . . . . . . .  B  ADDR  00B1H  NOT USED
-WAIT . . . . . . . . . . . . . . . .  C  ADDR  0006H
-WAIT1. . . . . . . . . . . . . . . .  C  ADDR  0008H
-WAIT2. . . . . . . . . . . . . . . .  C  ADDR  000AH
-WAIT3. . . . . . . . . . . . . . . .  C  ADDR  000CH
+WAIT . . . . . . . . . . . . . . . .  C  ADDR  0100H
+WAIT1. . . . . . . . . . . . . . . .  C  ADDR  0102H
+WAIT2. . . . . . . . . . . . . . . .  C  ADDR  0104H
+WAIT3. . . . . . . . . . . . . . . .  C  ADDR  0106H
 WDTCON . . . . . . . . . . . . . . .  D  ADDR  00A7H  NOT USED
 WDTPRG . . . . . . . . . . . . . . .  D  ADDR  00A7H  NOT USED
 WDTRST . . . . . . . . . . . . . . .  D  ADDR  00A6H  NOT USED
