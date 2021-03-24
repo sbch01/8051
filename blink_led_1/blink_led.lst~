@@ -22,8 +22,8 @@ blink_led                                                                       
 0034 80FA               21            SJMP START
                         22     ORG     0100H
 0100 7C05               23     WAIT:  MOV R4,#05H
-0102 7B00               24     WAIT1: MOV R3,#00H
-0104 7A00               25     WAIT2: MOV R2,#00H
+0102 7B05               24     WAIT1: MOV R3,#05H
+0104 7A05               25     WAIT2: MOV R2,#05H
 0106 DAFE               26     WAIT3: DJNZ R2,WAIT3
 0108 DBFA               27            DJNZ R3,WAIT2
 010A DCF6               28            DJNZ R4,WAIT1
