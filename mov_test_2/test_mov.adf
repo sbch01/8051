@@ -1,6 +1,6 @@
 # Assembler debug file for MCU 8051 IDE v1.4.9
 # Used assembler: MCU 8051 IDE
-# Date: 03/25/2021
+# Date: 04/04/2021
 99C9BA2289676848B62DF6A4C6B482F0 "mov_test_2/test_mov.asm" 
 0 10 0 128 46
 0 35 48 117 129 32

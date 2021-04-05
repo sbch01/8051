@@ -1,72 +1,98 @@
-test_branch                                                                                                             PAGE 1
-                         1     ;-----------------------------------------------------------------------------------------
-                         2     ;Това е пример на асемблер в , който е демонстрирано различни видове инструкции за
-                         3     ;извикване на подпрограми, инструкции за установяване в различни области на програмната памет
-                         4     ;както и инструкции за логически проверки
-                         5     ;
-                         6     ;25.03.2021             Автор: С. Банчев
-                         7     ;-----------------------------------------------------------------------------------------
-                         8
-                         9     ORG     0000H   ;място на което се установява PC след рестарт
-0000 802E               10             SJMP START ;инструкция за късо прескачане +127 до -128 байта от програмната памет
-                        11
-                        12
-                        13     ;ORG    000BH   ;място от програмната памет където се разполага
-                        14     ;       SJMP TMR0_INTR  ;вектора на прекъсване от таймер 0
+bintobcd                                                                                                                PAGE 1
+                         1     ;CONVERTING BIN (HEX) TO ASCII
+                         2
+  0040                   3     RAM_ADDR        EQU     40H
+  0050                   4     ASCI_RESULT     EQU     50H
+                         5     ;------------------------------------------
+                         6     ;
+  0060                   7     BCD_U           EQU     60H
+  0061                   8     BCD_H           EQU     61H
+  0062                   9     BCD_L           EQU     62H
+                        10
+  0063                  11     BIN_L           EQU     63H
+  0064                  12     BIN_H           EQU     64H
+                        13
+  0010                  14     CNTWRD          EQU     16
                         15
-                        16     ;ORG    001BH   ;място от програмната памет където се разполага
-                        17     ;       SJMP TMR1_INTR  ;вектора на прекъсване от таймер 1
-                        18
-                        19     ;ORG    0003H   ;място от програмната памет където се разполага
-                        20     ;       SJMP INT0_INTR ;вектора на прекъсване от външен източник 0
-                        21
-                        22     ;ORG    0013H ;място от програмната памет където се разполага
-                        23     ;       SJMP INT1_INTR  ;вектора на прекъсване от външен източник 1
+                        16
+                        17
+  0003                  18     COUNT           EQU     3
+                        19
+                        20     ;---------MAIN PROGRAM------------------------------------------
+                        21     ORG     0
+                        22     ;ACALL  BIN_DEC_CONVERT
+                        23     ;ACALL  DEC_ASCI_CONVERT
                         24
-                        25     ;ORG    0023H   ;място от програмната памет където се разполага
-                        26     ;       SJMP UART_INT   ;вектора на прекъсване от асинхрония приемо предавател на данни
-                        27
-                        28     ORG     0030H ;Директива за поместване на инструкциите от адрес 0х30 на програмната памет
-                        29     START:
-                        30             ;Откоментирай долния ред за да видиш съобщение за грешка при компилация.
-                        31             ;SJMP CODE_PLACE_1 ;CODE_PLACE_1 е на място START + 0xff и инструкция SJMP не върши работа
-0030 02012F             32             LJMP CODE_PLACE_1 ;Тази инструкция ще ни отпрати там, тъй като тя адресира може да адресира ц
-0033 02012F             33             JMP CODE_PLACE_1 ;Когато не сме сигурни колко е далече мястото можем да ползваме JMP
-                        34                             ;компилатора сам ще подбере дали да ползва LJMP или SJMP
-                        35     INITIAL:
-0036 120132             36             LCALL SUBROUTINE1 ;Записва в стека PC и установява PC на адрес SUBROUTINE1
-0039 740A               37             MOV A, #10
-                        38     LOOP1:
-003B 14                 39             DEC A   ;намаляване на акумулатора
-003C 70FD               40             JNZ LOOP1 ;ако акумулатора е различен от нула отиди на адрес LOOP1
-003E 74FF               41             MOV A, #255
-                        42     LOOP2:
-0040 04                 43             INC A ;увеличи акумулатора
-0041 60FD               44             JZ LOOP2 ;ако резултата в акумулатора е нула отиди на адрес LOOP2
-                        45     LOOP3:
-0043 33                 46             RLC A ;върти на ляво акумулатора през флага за пренос
-0044 50FD               47             JNC LOOP3 ;иди на LOOP3 ако флага за пренос е 1
+0000 756330             25     MOV BIN_L,#0X30
+0003 75645B             26     MOV BIN_H,#0X5B
+0006 112D               27     ACALL WRD_BIN_BCD
+                        28
+0008 80FE               29     SJMP    $
+                        30
+                        31     ;---------CONVERTING BIN (HEX) TO DEC (00-FF TO 000-255)--------
+                        32
+                        33     BIN_DEC_CONVERT:
+000A 7840               34             MOV R0, #RAM_ADDR
+000C E590               35             MOV A,P1
+000E 75F00A             36             MOV B,#10
+0011 84                 37             DIV AB
+0012 A6F0               38             MOV @R0,B
+0014 08                 39             INC R0
+0015 75F00A             40             MOV B,#10
+0018 84                 41             DIV AB
+0019 A6F0               42             MOV @R0,B
+001B 08                 43             INC R0
+001C F6                 44             MOV @R0,A
+001D 22                 45             RET
+                        46
+                        47     ;----------CONVERT DEC DIGITS TO ASCII DIGITS ------------------
                         48
-0046 780A               49             MOV R0, #10
-                        50     LOOP4:
-0048 D8FE               51             DJNZ R0, LOOP4 ;намали R0 ако е различно от нула иди на LOOP4
-                        52     LOOP5:
-004A 09                 53             INC R1
-004B B90AFC             54             CJNE R1, #0Ah , LOOP5 ;сравни R1 със 0х0А, ако не са равни иди на LOOP5
-                        55
-004E 00                 56             NOP     ;безкраен цикъл
-004F 80FD               57             SJMP $-1
-                        58
-                        59     CODE_PLACE_1:
-                        60     ORG     12FH
-012F 020036             61             LJMP INITIAL
-                        62
-                        63     SUBROUTINE1:
-0132 00                 64             NOP
-0133 00                 65             NOP
-0134 22                 66             RET ;връща от стека програмния брояч на адреса преди извикването на подпрограмата
-                        67     ;ORG 1FFH
-                        68     END
+                        49     DEC_ASCI_CONVERT:
+001E 7840               50             MOV R0,#RAM_ADDR
+0020 7950               51             MOV R1,#ASCI_RESULT
+0022 7A03               52             MOV R2,#COUNT
+0024 E6                 53     BACK:   MOV A,@R0
+0025 4430               54             ORL A,#30H
+0027 F7                 55             MOV @R1,A
+0028 08                 56             INC R0
+0029 09                 57             INC R1
+002A DAF8               58             DJNZ R2,BACK
+002C 22                 59             RET
+                        60
+                        61     WRD_BIN_BCD:
+002D C262               62             CLR BCD_L
+002F C261               63             CLR BCD_H
+0031 C260               64             CLR BCD_U
+0033 7810               65             MOV R0,#CNTWRD
+                        66     CONVERT_BIN:
+0035 E563               67             MOV A,BIN_L
+0037 33                 68             RLC A
+0038 F563               69             MOV BIN_L,A
+                        70
+003A E564               71             MOV A,BIN_H
+003C 33                 72             RLC A
+003D F564               73             MOV BIN_H,A
+                        74
+003F E562               75             MOV A,BCD_L
+0041 3562               76             ADDC A,BCD_L
+0043 D4                 77             DA A
+0044 F562               78             MOV BCD_L,A
+                        79
+0046 E561               80             MOV A,BCD_H
+0048 3561               81             ADDC A,BCD_H
+004A D4                 82             DA A
+004B F561               83             MOV BCD_H,A
+                        84
+004D E560               85             MOV A,BCD_U
+004F 33                 86             RLC A
+0050 F560               87             MOV BCD_U,A
+                        88
+0052 D8E1               89             DJNZ R0, CONVERT_BIN
+0054 22                 90             RET
+                        91
+                        92
+                        93
+                        94             END
 ASSEMBLY COMPLETE, NO ERRORS FOUND, NO WARNINGS
 
 
@@ -81,11 +107,19 @@ ADCLK. . . . . . . . . . . . . . . .  D  ADDR  00F2H  NOT USED
 ADCON. . . . . . . . . . . . . . . .  D  ADDR  00F3H  NOT USED
 ADDH . . . . . . . . . . . . . . . .  D  ADDR  00F5H  NOT USED
 ADDL . . . . . . . . . . . . . . . .  D  ADDR  00F4H  NOT USED
+ASCI_RESULT. . . . . . . . . . . . .  N  NUMB  0050H
 AUXR . . . . . . . . . . . . . . . .  D  ADDR  008EH  NOT USED
 AUXR1. . . . . . . . . . . . . . . .  D  ADDR  00A2H  NOT USED
-B. . . . . . . . . . . . . . . . . .  D  ADDR  00F0H  NOT USED
+B. . . . . . . . . . . . . . . . . .  D  ADDR  00F0H
+BACK . . . . . . . . . . . . . . . .  C  ADDR  0024H
+BCD_H. . . . . . . . . . . . . . . .  N  NUMB  0061H
+BCD_L. . . . . . . . . . . . . . . .  N  NUMB  0062H
+BCD_U. . . . . . . . . . . . . . . .  N  NUMB  0060H
 BDRCON . . . . . . . . . . . . . . .  D  ADDR  009BH  NOT USED
 BDRCON_1 . . . . . . . . . . . . . .  D  ADDR  009CH  NOT USED
+BIN_DEC_CONVERT. . . . . . . . . . .  C  ADDR  000AH  NOT USED
+BIN_H. . . . . . . . . . . . . . . .  N  NUMB  0064H
+BIN_L. . . . . . . . . . . . . . . .  N  NUMB  0063H
 BRL. . . . . . . . . . . . . . . . .  D  ADDR  009AH  NOT USED
 CCAP0H . . . . . . . . . . . . . . .  D  ADDR  00FAH  NOT USED
 CCAP0L . . . . . . . . . . . . . . .  D  ADDR  00EAH  NOT USED
@@ -120,11 +154,14 @@ CKSEL. . . . . . . . . . . . . . . .  D  ADDR  0085H  NOT USED
 CL . . . . . . . . . . . . . . . . .  D  ADDR  00E9H  NOT USED
 CLKREG . . . . . . . . . . . . . . .  D  ADDR  008FH  NOT USED
 CMOD . . . . . . . . . . . . . . . .  D  ADDR  00D9H  NOT USED
-CODE_PLACE_1 . . . . . . . . . . . .  C  ADDR  012FH
+CNTWRD . . . . . . . . . . . . . . .  N  NUMB  0010H
+CONVERT_BIN. . . . . . . . . . . . .  C  ADDR  0035H
+COUNT. . . . . . . . . . . . . . . .  N  NUMB  0003H
 CPRL2. . . . . . . . . . . . . . . .  B  ADDR  00C8H  NOT USED
 CR . . . . . . . . . . . . . . . . .  B  ADDR  00DEH  NOT USED
 CT2. . . . . . . . . . . . . . . . .  B  ADDR  00C9H  NOT USED
 CY . . . . . . . . . . . . . . . . .  B  ADDR  00D7H  NOT USED
+DEC_ASCI_CONVERT . . . . . . . . . .  C  ADDR  001EH  NOT USED
 DP0H . . . . . . . . . . . . . . . .  D  ADDR  0083H  NOT USED
 DP0L . . . . . . . . . . . . . . . .  D  ADDR  0082H  NOT USED
 DP1H . . . . . . . . . . . . . . . .  D  ADDR  0085H  NOT USED
@@ -149,7 +186,6 @@ FE . . . . . . . . . . . . . . . . .  B  ADDR  009FH  NOT USED
 IE . . . . . . . . . . . . . . . . .  D  ADDR  00A8H  NOT USED
 IE0. . . . . . . . . . . . . . . . .  B  ADDR  0089H  NOT USED
 IE1. . . . . . . . . . . . . . . . .  B  ADDR  008BH  NOT USED
-INITIAL. . . . . . . . . . . . . . .  C  ADDR  0036H
 INT0 . . . . . . . . . . . . . . . .  B  ADDR  00B2H  NOT USED
 INT1 . . . . . . . . . . . . . . . .  B  ADDR  00B3H  NOT USED
 IP . . . . . . . . . . . . . . . . .  D  ADDR  00B8H  NOT USED
@@ -163,16 +199,11 @@ IT1. . . . . . . . . . . . . . . . .  B  ADDR  008AH  NOT USED
 KBE. . . . . . . . . . . . . . . . .  D  ADDR  009DH  NOT USED
 KBF. . . . . . . . . . . . . . . . .  D  ADDR  009EH  NOT USED
 KBLS . . . . . . . . . . . . . . . .  D  ADDR  009CH  NOT USED
-LOOP1. . . . . . . . . . . . . . . .  C  ADDR  003BH
-LOOP2. . . . . . . . . . . . . . . .  C  ADDR  0040H
-LOOP3. . . . . . . . . . . . . . . .  C  ADDR  0043H
-LOOP4. . . . . . . . . . . . . . . .  C  ADDR  0048H
-LOOP5. . . . . . . . . . . . . . . .  C  ADDR  004AH
 OSCCON . . . . . . . . . . . . . . .  D  ADDR  0086H  NOT USED
 OV . . . . . . . . . . . . . . . . .  B  ADDR  00D2H  NOT USED
 P. . . . . . . . . . . . . . . . . .  B  ADDR  00D0H  NOT USED
 P0 . . . . . . . . . . . . . . . . .  D  ADDR  0080H  NOT USED
-P1 . . . . . . . . . . . . . . . . .  D  ADDR  0090H  NOT USED
+P1 . . . . . . . . . . . . . . . . .  D  ADDR  0090H
 P1M1 . . . . . . . . . . . . . . . .  D  ADDR  00D4H  NOT USED
 P1M2 . . . . . . . . . . . . . . . .  D  ADDR  00E2H  NOT USED
 P2 . . . . . . . . . . . . . . . . .  D  ADDR  00A0H  NOT USED
@@ -199,6 +230,7 @@ PX0. . . . . . . . . . . . . . . . .  B  ADDR  00B8H  NOT USED
 PX0L . . . . . . . . . . . . . . . .  B  ADDR  00B8H  NOT USED
 PX1. . . . . . . . . . . . . . . . .  B  ADDR  00BAH  NOT USED
 PX1L . . . . . . . . . . . . . . . .  B  ADDR  00BAH  NOT USED
+RAM_ADDR . . . . . . . . . . . . . .  N  NUMB  0040H
 RB8. . . . . . . . . . . . . . . . .  B  ADDR  009AH  NOT USED
 RCAP2H . . . . . . . . . . . . . . .  D  ADDR  00CBH  NOT USED
 RCAP2L . . . . . . . . . . . . . . .  D  ADDR  00CAH  NOT USED
@@ -229,8 +261,6 @@ SPDAT. . . . . . . . . . . . . . . .  D  ADDR  00C5H  NOT USED
 SPDR . . . . . . . . . . . . . . . .  D  ADDR  0086H  NOT USED
 SPSR . . . . . . . . . . . . . . . .  D  ADDR  00AAH  NOT USED
 SPSTA. . . . . . . . . . . . . . . .  D  ADDR  00C4H  NOT USED
-START. . . . . . . . . . . . . . . .  C  ADDR  0030H
-SUBROUTINE1. . . . . . . . . . . . .  C  ADDR  0132H
 T0 . . . . . . . . . . . . . . . . .  B  ADDR  00B4H  NOT USED
 T1 . . . . . . . . . . . . . . . . .  B  ADDR  00B5H  NOT USED
 T2CON. . . . . . . . . . . . . . . .  D  ADDR  00C8H  NOT USED
@@ -260,3 +290,4 @@ WDTCON . . . . . . . . . . . . . . .  D  ADDR  00A7H  NOT USED
 WDTPRG . . . . . . . . . . . . . . .  D  ADDR  00A7H  NOT USED
 WDTRST . . . . . . . . . . . . . . .  D  ADDR  00A6H  NOT USED
 WR . . . . . . . . . . . . . . . . .  B  ADDR  00B6H  NOT USED
+WRD_BIN_BCD. . . . . . . . . . . . .  C  ADDR  002DH

@@ -1,14 +1,14 @@
-test_branch                                                                                                             PAGE 1
+m_and_l_test                                                                                                            PAGE 1
                          1     ;-----------------------------------------------------------------------------------------
-                         2     ;Това е пример на асемблер в , който е демонстрирано различни видове инструкции за
-                         3     ;извикване на подпрограми, инструкции за установяване в различни области на програмната памет
-                         4     ;както и инструкции за логически проверки
+                         2     ;Това е пример на асемблер в , който е демонстрирано различни инструкции за математични и логически
+                         3     ; пресмятания 8051
+                         4     ;
                          5     ;
-                         6     ;25.03.2021             Автор: С. Банчев
+                         6     ;04.04.2021             Автор: С. Банчев
                          7     ;-----------------------------------------------------------------------------------------
                          8
                          9     ORG     0000H   ;място на което се установява PC след рестарт
-0000 802E               10             SJMP START ;инструкция за късо прескачане +127 до -128 байта от програмната памет
+                        10             SJMP START
                         11
                         12
                         13     ;ORG    000BH   ;място от програмната памет където се разполага
@@ -26,49 +26,43 @@ test_branch                                                                     
                         25     ;ORG    0023H   ;място от програмната памет където се разполага
                         26     ;       SJMP UART_INT   ;вектора на прекъсване от асинхрония приемо предавател на данни
                         27
-                        28     ORG     0030H ;Директива за поместване на инструкциите от адрес 0х30 на програмната памет
-                        29     START:
-                        30             ;Откоментирай долния ред за да видиш съобщение за грешка при компилация.
-                        31             ;SJMP CODE_PLACE_1 ;CODE_PLACE_1 е на място START + 0xff и инструкция SJMP не върши работа
-0030 02012F             32             LJMP CODE_PLACE_1 ;Тази инструкция ще ни отпрати там, тъй като тя адресира може да адресира ц
-0033 02012F             33             JMP CODE_PLACE_1 ;Когато не сме сигурни колко е далече мястото можем да ползваме JMP
-                        34                             ;компилатора сам ще подбере дали да ползва LJMP или SJMP
-                        35     INITIAL:
-0036 120132             36             LCALL SUBROUTINE1 ;Записва в стека PC и установява PC на адрес SUBROUTINE1
-0039 740A               37             MOV A, #10
-                        38     LOOP1:
-003B 14                 39             DEC A   ;намаляване на акумулатора
-003C 70FD               40             JNZ LOOP1 ;ако акумулатора е различен от нула отиди на адрес LOOP1
-003E 74FF               41             MOV A, #255
-                        42     LOOP2:
-0040 04                 43             INC A ;увеличи акумулатора
-0041 60FD               44             JZ LOOP2 ;ако резултата в акумулатора е нула отиди на адрес LOOP2
-                        45     LOOP3:
-0043 33                 46             RLC A ;върти на ляво акумулатора през флага за пренос
-0044 50FD               47             JNC LOOP3 ;иди на LOOP3 ако флага за пренос е 1
-                        48
-0046 780A               49             MOV R0, #10
-                        50     LOOP4:
-0048 D8FE               51             DJNZ R0, LOOP4 ;намали R0 ако е различно от нула иди на LOOP4
-                        52     LOOP5:
-004A 09                 53             INC R1
-004B B90AFC             54             CJNE R1, #0Ah , LOOP5 ;сравни R1 със 0х0А, ако не са равни иди на LOOP5
-                        55
-004E 00                 56             NOP     ;безкраен цикъл
-004F 80FD               57             SJMP $-1
-                        58
-                        59     CODE_PLACE_1:
-                        60     ORG     12FH
-012F 020036             61             LJMP INITIAL
-                        62
-                        63     SUBROUTINE1:
-0132 00                 64             NOP
-0133 00                 65             NOP
-0134 22                 66             RET ;връща от стека програмния брояч на адреса преди извикването на подпрограмата
-                        67     ;ORG 1FFH
-                        68     END
-ASSEMBLY COMPLETE, NO ERRORS FOUND, NO WARNINGS
+                        28
+  0030                  29     MYBYTE  EQU 30H ;Директива за дефиниране на константа
+  0002                  30     MYBIT   EQU 02H
+                        31     ORG     0030H   ;Започване на стартовата програма от адрес 30H на програмната памет
+                        32
+                        33     START:
+                        34             CPL OV
+                        35
+                        36             MOV A, #51
+                        37             MOV B, #5
+                        38             MUL AB
+                        39
+                        40             MOV A,#51
+                        41             MOV B,#6
+                        42             MUL AB
+                        43
+                        44             MOV A,#22
+                        45             MOV B,#7
+                        46             DIV AB
+                        47
+                        48     DELAY   MACRO
+                        49                     REPT 6
+****ERROR:Cannotdefinemacroinsideanotherone--macroprocessingfailed
+                        50                     NOP
+                        51
+                        52             ENDM
+                        53
+                        54     ELOOP:
+                        55             NOP
+                        56             JMP ELOOP
+                        57
+                        58             END
+ASSEMBLY COMPLETE, NO ERRORS FOUND, 1 WARNING
 
+
+ERROR SUMMARY:
+Line 49, ERROR:Cannotdefinemacroinsideanotherone--macroprocessingfailed
 
 SYMBOL TABLE:
 ??MCU_8051_IDE . . . . . . . . . . .  N  NUMB  8051H  NOT USED
@@ -83,7 +77,7 @@ ADDH . . . . . . . . . . . . . . . .  D  ADDR  00F5H  NOT USED
 ADDL . . . . . . . . . . . . . . . .  D  ADDR  00F4H  NOT USED
 AUXR . . . . . . . . . . . . . . . .  D  ADDR  008EH  NOT USED
 AUXR1. . . . . . . . . . . . . . . .  D  ADDR  00A2H  NOT USED
-B. . . . . . . . . . . . . . . . . .  D  ADDR  00F0H  NOT USED
+B. . . . . . . . . . . . . . . . . .  D  ADDR  00F0H
 BDRCON . . . . . . . . . . . . . . .  D  ADDR  009BH  NOT USED
 BDRCON_1 . . . . . . . . . . . . . .  D  ADDR  009CH  NOT USED
 BRL. . . . . . . . . . . . . . . . .  D  ADDR  009AH  NOT USED
@@ -120,7 +114,6 @@ CKSEL. . . . . . . . . . . . . . . .  D  ADDR  0085H  NOT USED
 CL . . . . . . . . . . . . . . . . .  D  ADDR  00E9H  NOT USED
 CLKREG . . . . . . . . . . . . . . .  D  ADDR  008FH  NOT USED
 CMOD . . . . . . . . . . . . . . . .  D  ADDR  00D9H  NOT USED
-CODE_PLACE_1 . . . . . . . . . . . .  C  ADDR  012FH
 CPRL2. . . . . . . . . . . . . . . .  B  ADDR  00C8H  NOT USED
 CR . . . . . . . . . . . . . . . . .  B  ADDR  00DEH  NOT USED
 CT2. . . . . . . . . . . . . . . . .  B  ADDR  00C9H  NOT USED
@@ -134,6 +127,7 @@ DPL. . . . . . . . . . . . . . . . .  D  ADDR  0082H  NOT USED
 EA . . . . . . . . . . . . . . . . .  B  ADDR  00AFH  NOT USED
 EC . . . . . . . . . . . . . . . . .  B  ADDR  00AEH  NOT USED
 EECON. . . . . . . . . . . . . . . .  D  ADDR  0096H  NOT USED
+ELOOP. . . . . . . . . . . . . . . .  C  ADDR  0044H
 ES . . . . . . . . . . . . . . . . .  B  ADDR  00ACH  NOT USED
 ET0. . . . . . . . . . . . . . . . .  B  ADDR  00A9H  NOT USED
 ET1. . . . . . . . . . . . . . . . .  B  ADDR  00ABH  NOT USED
@@ -149,7 +143,6 @@ FE . . . . . . . . . . . . . . . . .  B  ADDR  009FH  NOT USED
 IE . . . . . . . . . . . . . . . . .  D  ADDR  00A8H  NOT USED
 IE0. . . . . . . . . . . . . . . . .  B  ADDR  0089H  NOT USED
 IE1. . . . . . . . . . . . . . . . .  B  ADDR  008BH  NOT USED
-INITIAL. . . . . . . . . . . . . . .  C  ADDR  0036H
 INT0 . . . . . . . . . . . . . . . .  B  ADDR  00B2H  NOT USED
 INT1 . . . . . . . . . . . . . . . .  B  ADDR  00B3H  NOT USED
 IP . . . . . . . . . . . . . . . . .  D  ADDR  00B8H  NOT USED
@@ -163,13 +156,10 @@ IT1. . . . . . . . . . . . . . . . .  B  ADDR  008AH  NOT USED
 KBE. . . . . . . . . . . . . . . . .  D  ADDR  009DH  NOT USED
 KBF. . . . . . . . . . . . . . . . .  D  ADDR  009EH  NOT USED
 KBLS . . . . . . . . . . . . . . . .  D  ADDR  009CH  NOT USED
-LOOP1. . . . . . . . . . . . . . . .  C  ADDR  003BH
-LOOP2. . . . . . . . . . . . . . . .  C  ADDR  0040H
-LOOP3. . . . . . . . . . . . . . . .  C  ADDR  0043H
-LOOP4. . . . . . . . . . . . . . . .  C  ADDR  0048H
-LOOP5. . . . . . . . . . . . . . . .  C  ADDR  004AH
+MYBIT. . . . . . . . . . . . . . . .  N  NUMB  0002H  NOT USED
+MYBYTE . . . . . . . . . . . . . . .  N  NUMB  0030H  NOT USED
 OSCCON . . . . . . . . . . . . . . .  D  ADDR  0086H  NOT USED
-OV . . . . . . . . . . . . . . . . .  B  ADDR  00D2H  NOT USED
+OV . . . . . . . . . . . . . . . . .  B  ADDR  00D2H
 P. . . . . . . . . . . . . . . . . .  B  ADDR  00D0H  NOT USED
 P0 . . . . . . . . . . . . . . . . .  D  ADDR  0080H  NOT USED
 P1 . . . . . . . . . . . . . . . . .  D  ADDR  0090H  NOT USED
@@ -230,7 +220,6 @@ SPDR . . . . . . . . . . . . . . . .  D  ADDR  0086H  NOT USED
 SPSR . . . . . . . . . . . . . . . .  D  ADDR  00AAH  NOT USED
 SPSTA. . . . . . . . . . . . . . . .  D  ADDR  00C4H  NOT USED
 START. . . . . . . . . . . . . . . .  C  ADDR  0030H
-SUBROUTINE1. . . . . . . . . . . . .  C  ADDR  0132H
 T0 . . . . . . . . . . . . . . . . .  B  ADDR  00B4H  NOT USED
 T1 . . . . . . . . . . . . . . . . .  B  ADDR  00B5H  NOT USED
 T2CON. . . . . . . . . . . . . . . .  D  ADDR  00C8H  NOT USED
