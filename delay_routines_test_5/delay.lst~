@@ -1,18 +1,18 @@
-m_and_l_test                                                                                                            PAGE 1
+delay                                                                                                                   PAGE 1
                          1     ;-----------------------------------------------------------------------------------------
-                         2     ;Това е пример на асемблер в , който е демонстрирано различни инструкции за математични и логически
-                         3     ; пресмятания 8051
+                         2     ;Това е пример на асемблер в , който е демонстрирано подпрограми за изчакване чрез и без използване н
+                         3     ;бградените таймери
                          4     ;
                          5     ;
-                         6     ;04.04.2021             Автор: С. Банчев
+                         6     ;18.04.2021             Автор: С. Банчев
                          7     ;-----------------------------------------------------------------------------------------
                          8
                          9     ORG     0000H   ;място на което се установява PC след рестарт
-0000 802E               10             SJMP START
+0000 802E               10             SJMP INITIAL
                         11
                         12
-                        13     ;ORG    000BH   ;място от програмната памет където се разполага
-                        14     ;       SJMP TMR0_INTR  ;вектора на прекъсване от таймер 0
+                        13     ORG     000BH   ;място от програмната памет където се разполага
+000B 8039               14             SJMP TMR0_INTR  ;вектора на прекъсване от таймер 0
                         15
                         16     ;ORG    001BH   ;място от програмната памет където се разполага
                         17     ;       SJMP TMR1_INTR  ;вектора на прекъсване от таймер 1
@@ -31,49 +31,33 @@ m_and_l_test                                                                    
   0002                  30     MYBIT   EQU 02H
                         31     ORG     0030H   ;Започване на стартовата програма от адрес 30H на програмната памет
                         32
-                        33     START:
-                        34
-                        35
-0030 B2D2               36             CPL OV
-                        37
-0032 7433               38             MOV A, #51
-0034 75F005             39             MOV B, #5
-0037 A4                 40             MUL AB
-                        41
-0038 7433               42             MOV A,#51
-003A 75F006             43             MOV B,#6
-003D A4                 44             MUL AB
-                        45
-003E 740A               46             MOV A,#10
-0040 75F003             47             MOV B,#3
-0043 120049             48             CALL DIV_6
-                        49
-                        50
-                        51
-                        52     ELOOP:
-0046 00                 53             NOP
-0047 80FD               54             JMP ELOOP
-                        55
-                        56
-                        57     ;-------Подпрограма за делене до 6 знак след десетичната запетая-------------------
-                        58     DIV_6:
-0049 7830               59             MOV R0,#DECRES ;Начален адрес на съхранение на резултата
-004B 7907               60             MOV R1,#7 ;Определяне на знака
-004D AAF0               61             MOV R2,B ;Записване на делителя в Р2
-004F 84                 62             DIV AB; Старт на операцията
-                        63
-                        64     DIV_LOOP:
-0050 F6                 65             MOV @R0, A ;Преместване на резултата в началния адрес
-0051 E5F0               66             MOV A,B ;Преместване на остатъка в акумулатора
-0053 75F00A             67             MOV B,#10
-0056 A4                 68             MUL AB ;Умножение на устатъка по 10
-0057 8AF0               69             MOV B,R2 ;Зареждане на делителя
-0059 84                 70             DIV AB ;Деление на поредния нак
-005A 08                 71             INC R0 ;Увеличаване на текущя адрес, в който се съхранява знака
-005B D9F3               72             DJNZ R1, DIV_LOOP
-005D 22                 73             RET
-                        74
-                        75             END
+                        33     INITIAL:
+                        34             ;Включване на таймер 0
+0030 758902             35             MOV TMOD,#00000010B ;Тестване на различните видове работи на таймера чрез битове М10 и М00
+0033 758812             36             MOV TCON,#00010010B ;Конфигуриране на таймер 0
+0036 75A882             37             MOV IE,#10000010B ;Разрешеаване на прекъсване от таймер 0
+0039 758C9B             38             MOV TH0,#155
+                        39     START:
+                        40
+003C 120041             41             CALL WAIT_US
+003F 80FE               42             JMP $
+                        43
+                        44     ;-----------------------------------------------------------------------------------
+                        45     ;Подпрограми за изчакване
+                        46     ;-----------------------------------------------------------------------------------
+                        47
+                        48     ;Подпрограма изчакваща около 10 uS
+                        49     WAIT_US:
+0041 7805               50             MOV R0,#5
+0043 D8FE               51             DJNZ R0,$
+0045 22                 52             RET
+                        53
+                        54
+                        55     TMR0_INTR:
+0046 00                 56             NOP
+0047 C28D               57             CLR TF0
+0049 32                 58             RETI
+                        59             END
 ASSEMBLY COMPLETE, NO ERRORS FOUND, NO WARNINGS
 
 
@@ -90,7 +74,7 @@ ADDH . . . . . . . . . . . . . . . .  D  ADDR  00F5H  NOT USED
 ADDL . . . . . . . . . . . . . . . .  D  ADDR  00F4H  NOT USED
 AUXR . . . . . . . . . . . . . . . .  D  ADDR  008EH  NOT USED
 AUXR1. . . . . . . . . . . . . . . .  D  ADDR  00A2H  NOT USED
-B. . . . . . . . . . . . . . . . . .  D  ADDR  00F0H
+B. . . . . . . . . . . . . . . . . .  D  ADDR  00F0H  NOT USED
 BDRCON . . . . . . . . . . . . . . .  D  ADDR  009BH  NOT USED
 BDRCON_1 . . . . . . . . . . . . . .  D  ADDR  009CH  NOT USED
 BRL. . . . . . . . . . . . . . . . .  D  ADDR  009AH  NOT USED
@@ -131,9 +115,7 @@ CPRL2. . . . . . . . . . . . . . . .  B  ADDR  00C8H  NOT USED
 CR . . . . . . . . . . . . . . . . .  B  ADDR  00DEH  NOT USED
 CT2. . . . . . . . . . . . . . . . .  B  ADDR  00C9H  NOT USED
 CY . . . . . . . . . . . . . . . . .  B  ADDR  00D7H  NOT USED
-DECRES . . . . . . . . . . . . . . .  N  NUMB  0030H
-DIV_6. . . . . . . . . . . . . . . .  C  ADDR  0049H
-DIV_LOOP . . . . . . . . . . . . . .  C  ADDR  0050H
+DECRES . . . . . . . . . . . . . . .  N  NUMB  0030H  NOT USED
 DP0H . . . . . . . . . . . . . . . .  D  ADDR  0083H  NOT USED
 DP0L . . . . . . . . . . . . . . . .  D  ADDR  0082H  NOT USED
 DP1H . . . . . . . . . . . . . . . .  D  ADDR  0085H  NOT USED
@@ -143,7 +125,6 @@ DPL. . . . . . . . . . . . . . . . .  D  ADDR  0082H  NOT USED
 EA . . . . . . . . . . . . . . . . .  B  ADDR  00AFH  NOT USED
 EC . . . . . . . . . . . . . . . . .  B  ADDR  00AEH  NOT USED
 EECON. . . . . . . . . . . . . . . .  D  ADDR  0096H  NOT USED
-ELOOP. . . . . . . . . . . . . . . .  C  ADDR  0046H
 ES . . . . . . . . . . . . . . . . .  B  ADDR  00ACH  NOT USED
 ET0. . . . . . . . . . . . . . . . .  B  ADDR  00A9H  NOT USED
 ET1. . . . . . . . . . . . . . . . .  B  ADDR  00ABH  NOT USED
@@ -156,9 +137,10 @@ EXTI0. . . . . . . . . . . . . . . .  C  ADDR  0003H  NOT USED
 EXTI1. . . . . . . . . . . . . . . .  C  ADDR  0013H  NOT USED
 F0 . . . . . . . . . . . . . . . . .  B  ADDR  00D5H  NOT USED
 FE . . . . . . . . . . . . . . . . .  B  ADDR  009FH  NOT USED
-IE . . . . . . . . . . . . . . . . .  D  ADDR  00A8H  NOT USED
+IE . . . . . . . . . . . . . . . . .  D  ADDR  00A8H
 IE0. . . . . . . . . . . . . . . . .  B  ADDR  0089H  NOT USED
 IE1. . . . . . . . . . . . . . . . .  B  ADDR  008BH  NOT USED
+INITIAL. . . . . . . . . . . . . . .  C  ADDR  0030H
 INT0 . . . . . . . . . . . . . . . .  B  ADDR  00B2H  NOT USED
 INT1 . . . . . . . . . . . . . . . .  B  ADDR  00B3H  NOT USED
 IP . . . . . . . . . . . . . . . . .  D  ADDR  00B8H  NOT USED
@@ -174,7 +156,7 @@ KBF. . . . . . . . . . . . . . . . .  D  ADDR  009EH  NOT USED
 KBLS . . . . . . . . . . . . . . . .  D  ADDR  009CH  NOT USED
 MYBIT. . . . . . . . . . . . . . . .  N  NUMB  0002H  NOT USED
 OSCCON . . . . . . . . . . . . . . .  D  ADDR  0086H  NOT USED
-OV . . . . . . . . . . . . . . . . .  B  ADDR  00D2H
+OV . . . . . . . . . . . . . . . . .  B  ADDR  00D2H  NOT USED
 P. . . . . . . . . . . . . . . . . .  B  ADDR  00D0H  NOT USED
 P0 . . . . . . . . . . . . . . . . .  D  ADDR  0080H  NOT USED
 P1 . . . . . . . . . . . . . . . . .  D  ADDR  0090H  NOT USED
@@ -234,18 +216,18 @@ SPDAT. . . . . . . . . . . . . . . .  D  ADDR  00C5H  NOT USED
 SPDR . . . . . . . . . . . . . . . .  D  ADDR  0086H  NOT USED
 SPSR . . . . . . . . . . . . . . . .  D  ADDR  00AAH  NOT USED
 SPSTA. . . . . . . . . . . . . . . .  D  ADDR  00C4H  NOT USED
-START. . . . . . . . . . . . . . . .  C  ADDR  0030H
+START. . . . . . . . . . . . . . . .  C  ADDR  003CH  NOT USED
 T0 . . . . . . . . . . . . . . . . .  B  ADDR  00B4H  NOT USED
 T1 . . . . . . . . . . . . . . . . .  B  ADDR  00B5H  NOT USED
 T2CON. . . . . . . . . . . . . . . .  D  ADDR  00C8H  NOT USED
 T2MOD. . . . . . . . . . . . . . . .  D  ADDR  00C9H  NOT USED
 TB8. . . . . . . . . . . . . . . . .  B  ADDR  009BH  NOT USED
 TCLK . . . . . . . . . . . . . . . .  B  ADDR  00CCH  NOT USED
-TCON . . . . . . . . . . . . . . . .  D  ADDR  0088H  NOT USED
-TF0. . . . . . . . . . . . . . . . .  B  ADDR  008DH  NOT USED
+TCON . . . . . . . . . . . . . . . .  D  ADDR  0088H
+TF0. . . . . . . . . . . . . . . . .  B  ADDR  008DH
 TF1. . . . . . . . . . . . . . . . .  B  ADDR  008FH  NOT USED
 TF2. . . . . . . . . . . . . . . . .  B  ADDR  00CFH  NOT USED
-TH0. . . . . . . . . . . . . . . . .  D  ADDR  008CH  NOT USED
+TH0. . . . . . . . . . . . . . . . .  D  ADDR  008CH
 TH1. . . . . . . . . . . . . . . . .  D  ADDR  008DH  NOT USED
 TH2. . . . . . . . . . . . . . . . .  D  ADDR  00CDH  NOT USED
 TI . . . . . . . . . . . . . . . . .  B  ADDR  0099H  NOT USED
@@ -255,11 +237,13 @@ TIMER2 . . . . . . . . . . . . . . .  C  ADDR  002BH  NOT USED
 TL0. . . . . . . . . . . . . . . . .  D  ADDR  008AH  NOT USED
 TL1. . . . . . . . . . . . . . . . .  D  ADDR  008BH  NOT USED
 TL2. . . . . . . . . . . . . . . . .  D  ADDR  00CCH  NOT USED
-TMOD . . . . . . . . . . . . . . . .  D  ADDR  0089H  NOT USED
+TMOD . . . . . . . . . . . . . . . .  D  ADDR  0089H
+TMR0_INTR. . . . . . . . . . . . . .  C  ADDR  0046H
 TR0. . . . . . . . . . . . . . . . .  B  ADDR  008CH  NOT USED
 TR1. . . . . . . . . . . . . . . . .  B  ADDR  008EH  NOT USED
 TR2. . . . . . . . . . . . . . . . .  B  ADDR  00CAH  NOT USED
 TXD. . . . . . . . . . . . . . . . .  B  ADDR  00B1H  NOT USED
+WAIT_US. . . . . . . . . . . . . . .  C  ADDR  0041H
 WDTCON . . . . . . . . . . . . . . .  D  ADDR  00A7H  NOT USED
 WDTPRG . . . . . . . . . . . . . . .  D  ADDR  00A7H  NOT USED
 WDTRST . . . . . . . . . . . . . . .  D  ADDR  00A6H  NOT USED

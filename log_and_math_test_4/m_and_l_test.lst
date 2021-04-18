@@ -8,7 +8,7 @@ m_and_l_test                                                                    
                          7     ;-----------------------------------------------------------------------------------------
                          8
                          9     ORG     0000H   ;място на което се установява PC след рестарт
-                        10             SJMP START
+0000 802E               10             SJMP START
                         11
                         12
                         13     ;ORG    000BH   ;място от програмната памет където се разполага
@@ -27,42 +27,52 @@ m_and_l_test                                                                    
                         26     ;       SJMP UART_INT   ;вектора на прекъсване от асинхрония приемо предавател на данни
                         27
                         28
-  0030                  29     MYBYTE  EQU 30H ;Директива за дефиниране на константа
+  0030                  29     DECRES  EQU 30H ;Директива за дефиниране на константа
   0002                  30     MYBIT   EQU 02H
                         31     ORG     0030H   ;Започване на стартовата програма от адрес 30H на програмната памет
                         32
                         33     START:
-                        34             CPL OV
+                        34
                         35
-                        36             MOV A, #51
-                        37             MOV B, #5
-                        38             MUL AB
-                        39
-                        40             MOV A,#51
-                        41             MOV B,#6
-                        42             MUL AB
-                        43
-                        44             MOV A,#22
-                        45             MOV B,#7
-                        46             DIV AB
-                        47
-                        48     DELAY   MACRO
-                        49                     REPT 6
-****ERROR:Cannotdefinemacroinsideanotherone--macroprocessingfailed
-                        50                     NOP
-                        51
-                        52             ENDM
+0030 B2D2               36             CPL OV
+                        37
+0032 7433               38             MOV A, #51
+0034 75F005             39             MOV B, #5
+0037 A4                 40             MUL AB
+                        41
+0038 7433               42             MOV A,#51
+003A 75F006             43             MOV B,#6
+003D A4                 44             MUL AB
+                        45
+003E 740A               46             MOV A,#10
+0040 75F003             47             MOV B,#3
+0043 120049             48             CALL DIV_6
+                        49     ELOOP:
+0046 00                 50             NOP
+0047 80FD               51             JMP ELOOP
+                        52
                         53
-                        54     ELOOP:
-                        55             NOP
-                        56             JMP ELOOP
-                        57
-                        58             END
-ASSEMBLY COMPLETE, NO ERRORS FOUND, 1 WARNING
+                        54     ;-------Подпрограма за делене до 6 знак след десетичната запетая-------------------
+                        55     DIV_6:
+0049 7830               56             MOV R0,#DECRES ;Начален адрес на съхранение на резултата
+004B 7907               57             MOV R1,#7 ;Определяне на знака
+004D AAF0               58             MOV R2,B ;Записване на делителя в Р2
+004F 84                 59             DIV AB; Старт на операцията
+                        60
+                        61     DIV_LOOP:
+0050 F6                 62             MOV @R0, A ;Преместване на резултата в началния адрес
+0051 E5F0               63             MOV A,B ;Преместване на остатъка в акумулатора
+0053 75F00A             64             MOV B,#10
+0056 A4                 65             MUL AB ;Умножение на устатъка по 10
+0057 8AF0               66             MOV B,R2 ;Зареждане на делителя
+0059 84                 67             DIV AB ;Деление на поредния нак
+005A 08                 68             INC R0 ;Увеличаване на текущя адрес, в който се съхранява знака
+005B D9F3               69             DJNZ R1, DIV_LOOP
+005D 22                 70             RET
+                        71
+                        72             END
+ASSEMBLY COMPLETE, NO ERRORS FOUND, NO WARNINGS
 
-
-ERROR SUMMARY:
-Line 49, ERROR:Cannotdefinemacroinsideanotherone--macroprocessingfailed
 
 SYMBOL TABLE:
 ??MCU_8051_IDE . . . . . . . . . . .  N  NUMB  8051H  NOT USED
@@ -118,6 +128,9 @@ CPRL2. . . . . . . . . . . . . . . .  B  ADDR  00C8H  NOT USED
 CR . . . . . . . . . . . . . . . . .  B  ADDR  00DEH  NOT USED
 CT2. . . . . . . . . . . . . . . . .  B  ADDR  00C9H  NOT USED
 CY . . . . . . . . . . . . . . . . .  B  ADDR  00D7H  NOT USED
+DECRES . . . . . . . . . . . . . . .  N  NUMB  0030H
+DIV_6. . . . . . . . . . . . . . . .  C  ADDR  0049H
+DIV_LOOP . . . . . . . . . . . . . .  C  ADDR  0050H
 DP0H . . . . . . . . . . . . . . . .  D  ADDR  0083H  NOT USED
 DP0L . . . . . . . . . . . . . . . .  D  ADDR  0082H  NOT USED
 DP1H . . . . . . . . . . . . . . . .  D  ADDR  0085H  NOT USED
@@ -127,7 +140,7 @@ DPL. . . . . . . . . . . . . . . . .  D  ADDR  0082H  NOT USED
 EA . . . . . . . . . . . . . . . . .  B  ADDR  00AFH  NOT USED
 EC . . . . . . . . . . . . . . . . .  B  ADDR  00AEH  NOT USED
 EECON. . . . . . . . . . . . . . . .  D  ADDR  0096H  NOT USED
-ELOOP. . . . . . . . . . . . . . . .  C  ADDR  0044H
+ELOOP. . . . . . . . . . . . . . . .  C  ADDR  0046H
 ES . . . . . . . . . . . . . . . . .  B  ADDR  00ACH  NOT USED
 ET0. . . . . . . . . . . . . . . . .  B  ADDR  00A9H  NOT USED
 ET1. . . . . . . . . . . . . . . . .  B  ADDR  00ABH  NOT USED
@@ -157,7 +170,6 @@ KBE. . . . . . . . . . . . . . . . .  D  ADDR  009DH  NOT USED
 KBF. . . . . . . . . . . . . . . . .  D  ADDR  009EH  NOT USED
 KBLS . . . . . . . . . . . . . . . .  D  ADDR  009CH  NOT USED
 MYBIT. . . . . . . . . . . . . . . .  N  NUMB  0002H  NOT USED
-MYBYTE . . . . . . . . . . . . . . .  N  NUMB  0030H  NOT USED
 OSCCON . . . . . . . . . . . . . . .  D  ADDR  0086H  NOT USED
 OV . . . . . . . . . . . . . . . . .  B  ADDR  00D2H
 P. . . . . . . . . . . . . . . . . .  B  ADDR  00D0H  NOT USED
