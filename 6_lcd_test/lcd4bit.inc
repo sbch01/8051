@@ -129,7 +129,7 @@ lcd_dat:                  ;LCD data Routine
 	nop
 	clr en                ;Enable = 0
 
- 	mov A,#1           ;1mS delay
+ 	mov A,#1              ;1mS delay
 	mov B,#0
 	acall Wait_mS
 

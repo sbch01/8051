@@ -3,7 +3,7 @@ lcd_tutorial                                                                    
                          2     ;Here is LCD Tutorial for 8051 MCU
                          3     ;The demo is for 8bit data comunication with LCD
                          4     ;
-                         5     ;------------------------------------------------------------------------------
+                         5     ;-----------------------------------------------------------------------------
                          6
                          7     ORG     0000H   ;
 0000 802E                8             SJMP Initial
@@ -30,253 +30,254 @@ lcd_tutorial                                                                    
                         29     Initial:
 0030 75B03F             30             MOV P3,#3FH
                         31
-0033 116E               32             ACALL LCD_init
-                        33
-0035 7480               34             MOV A,#DD_RAM_ADDR1
-0037 1199               35             ACALL LCD_command
-                        36
-0039 7453               37             MOV A,#'S'
-003B 11A6               38             ACALL LCD_sendchar
-                        39
-003D 74C0               40             MOV A,#DD_RAM_ADDR2
-003F 1199               41             ACALL LCD_command
-                        42
-0041 7442               43             MOV A,#'B'
-0043 11A6               44             ACALL LCD_sendchar
-                        45
-0045 7401               46             MOV A,#CLR_DISP
-0047 1199               47             ACALL LCD_command
-                        48
-0049 740E               49             MOV A,#DISP_ON_CUR
-004B 1199               50             ACALL LCD_command
-                        51
-004D 7480               52             MOV A,#DD_RAM_ADDR1
-004F 1199               53             ACALL LCD_command
-                        54
-0051 900200             55             MOV DPTR,#STR1
-0054 11C1               56             ACALL LCD_sendstr
-                        57
-0056 900210             58             MOV DPTR,#BELL
-0059 11B3               59             ACALL LCD_buildchar
-                        60
-005B 7401               61             MOV A,#CLR_DISP
-005D 1199               62             ACALL LCD_command
-                        63
-005F 740C               64             MOV A,#DISP_ON
-0061 1199               65             ACALL LCD_command
-                        66
-0063 7480               67             MOV A,#DD_RAM_ADDR1
-0065 1199               68             ACALL LCD_command
-                        69
-0067 7400               70             MOV A,#0H
-0069 11A6               71             ACALL LCD_sendchar
-                        72
+                        32
+0033 116E               33             ACALL LCD_init
+                        34
+0035 7480               35             MOV A,#DD_RAM_ADDR1
+0037 1199               36             ACALL LCD_command
+                        37
+0039 7453               38             MOV A,#'S'
+003B 11A6               39             ACALL LCD_sendchar
+                        40
+003D 74C0               41             MOV A,#DD_RAM_ADDR2
+003F 1199               42             ACALL LCD_command
+                        43
+0041 7442               44             MOV A,#'B'
+0043 11A6               45             ACALL LCD_sendchar
+                        46
+0045 7401               47             MOV A,#CLR_DISP
+0047 1199               48             ACALL LCD_command
+                        49
+0049 740E               50             MOV A,#DISP_ON_CUR
+004B 1199               51             ACALL LCD_command
+                        52
+004D 7480               53             MOV A,#DD_RAM_ADDR1
+004F 1199               54             ACALL LCD_command
+                        55
+0051 900200             56             MOV DPTR,#STR1
+0054 11C1               57             ACALL LCD_sendstr
+                        58
+0056 900210             59             MOV DPTR,#BELL
+0059 11B3               60             ACALL LCD_buildchar
+                        61
+005B 7401               62             MOV A,#CLR_DISP
+005D 1199               63             ACALL LCD_command
+                        64
+005F 740C               65             MOV A,#DISP_ON
+0061 1199               66             ACALL LCD_command
+                        67
+0063 7480               68             MOV A,#DD_RAM_ADDR1
+0065 1199               69             ACALL LCD_command
+                        70
+0067 7400               71             MOV A,#0H
+0069 11A6               72             ACALL LCD_sendchar
                         73
-                        74     Start:
-006B 00                 75             NOP
-                        76     Loop1:
-                        77             ;CLR P1.0
-                        78             ;SETB P1.0
-                        79             ;NOP
-                        80             ;JB P1.0,Start
-006C 80FD               81             JMP Start
-                        82
+                        74
+                        75     Start:
+006B 00                 76             NOP
+                        77     Loop1:
+                        78             ;CLR P1.0
+                        79             ;SETB P1.0
+                        80             ;NOP
+                        81             ;JB P1.0,Start
+006C 80FD               82             JMP Start
                         83
-                        84     ;------------------------------------------------------------------
-                        85     ; Subroutines Library
-                        86     ;------------------------------------------------------------------
-                 =1     87     INCLUDE lcd.inc
-                 =1     88     ;Some of web
-                 =1     89     ;https://www.8051projects.net/lcd-interfacing/introduction.php
-                 =1     90
-                 =1     91     ;===============Initialisation constant================================
-  0030           =1     92     FUNC_8BIT_1L    EQU 30H
-  0038           =1     93     FUNC_8BIT_2L    EQU 38H
-  0020           =1     94     FUNC_4BIT_1L    EQU 20H
-  0028           =1     95     FUNC_4BIT_2L    EQU 28H
-                 =1     96     ;================Comand definition=====================================
-  000C           =1     97     DISP_ON         EQU 0CH
-  000E           =1     98     DISP_ON_CUR     EQU 0EH
-  000F           =1     99     DISP_ON_BLK     EQU 0FH
-  0008           =1    100     DISP_OFF        EQU 08H
-  0001           =1    101     CLR_DISP        EQU 01H
-                 =1    102
-  0006           =1    103     ENTRY_INC       EQU 06H
-  0007           =1    104     ENTRY_INC_S     EQU 07H
-  0004           =1    105     ENTRY_DEC       EQU 04H
-  0005           =1    106     ENTRY_DEC_S     EQU 05H
-                 =1    107
-                 =1    108     ;=================Disp addresses=======================================
-  0080           =1    109     DD_RAM_ADDR1    EQU 80H ;First line start address
-  00C0           =1    110     DD_RAM_ADDR2    EQU 0C0H ;Second line start address
-  0094           =1    111     DD_RAM_ADDR3    EQU 94H ;Third line start address on 20x4 lcds
-  00D4           =1    112     DD_RAM_ADDR4    EQU 0D4H ;Fourth line start address on 20x4 lcds
-                 =1    113
-  0040           =1    114     CG_RAM_ADDR     EQU 40H
-                 =1    115
-                 =1    116     ;======================================================================
-                 =1    117     ; Here define the pins you use for LCD control in 8 bit mode
-  00A0           =1    118     LCD_data equ P2    ;LCD Data port
-  00A7           =1    119     LCD_D7   equ P2.7  ;LCD D7/Busy Flag
-  0090           =1    120     LCD_rs   equ P1.0  ;LCD Register Select
-  0091           =1    121     LCD_rw   equ P1.1  ;LCD Read/Write
-  0092           =1    122     LCD_en   equ P1.2  ;LCD Enable
-                 =1    123
+                        84
+                        85     ;------------------------------------------------------------------
+                        86     ; Subroutines Library
+                        87     ;------------------------------------------------------------------
+                 =1     88     INCLUDE lcd.inc
+                 =1     89     ;Some of web
+                 =1     90     ;https://www.8051projects.net/lcd-interfacing/introduction.php
+                 =1     91
+                 =1     92     ;===============Initialisation constant================================
+  0030           =1     93     FUNC_8BIT_1L    EQU 30H
+  0038           =1     94     FUNC_8BIT_2L    EQU 38H
+  0020           =1     95     FUNC_4BIT_1L    EQU 20H
+  0028           =1     96     FUNC_4BIT_2L    EQU 28H
+                 =1     97     ;================Comand definition=====================================
+  000C           =1     98     DISP_ON         EQU 0CH
+  000E           =1     99     DISP_ON_CUR     EQU 0EH
+  000F           =1    100     DISP_ON_BLK     EQU 0FH
+  0008           =1    101     DISP_OFF        EQU 08H
+  0001           =1    102     CLR_DISP        EQU 01H
+                 =1    103
+  0006           =1    104     ENTRY_INC       EQU 06H
+  0007           =1    105     ENTRY_INC_S     EQU 07H
+  0004           =1    106     ENTRY_DEC       EQU 04H
+  0005           =1    107     ENTRY_DEC_S     EQU 05H
+                 =1    108
+                 =1    109     ;=================Disp addresses=======================================
+  0080           =1    110     DD_RAM_ADDR1    EQU 80H ;First line start address
+  00C0           =1    111     DD_RAM_ADDR2    EQU 0C0H ;Second line start address
+  0094           =1    112     DD_RAM_ADDR3    EQU 94H ;Third line start address on 20x4 lcds
+  00D4           =1    113     DD_RAM_ADDR4    EQU 0D4H ;Fourth line start address on 20x4 lcds
+                 =1    114
+  0040           =1    115     CG_RAM_ADDR     EQU 40H
+                 =1    116
+                 =1    117     ;======================================================================
+                 =1    118     ; Here define the pins you use for LCD control in 8 bit mode
+  00A0           =1    119     LCD_data equ P2    ;LCD Data port
+  00A7           =1    120     LCD_D7   equ P2.7  ;LCD D7/Busy Flag
+  0090           =1    121     LCD_rs   equ P1.0  ;LCD Register Select
+  0091           =1    122     LCD_rw   equ P1.1  ;LCD Read/Write
+  0092           =1    123     LCD_en   equ P1.2  ;LCD Enable
                  =1    124
                  =1    125
-                 =1    126     LCD_Init:
-                 =1    127     ;----------------------------------------------------------------------
-006E C290        =1    128             clr LCD_rs
-0070 C291        =1    129             clr LCD_rw
-0072 C292        =1    130             clr LCD_en
-                 =1    131
-0074 7414        =1    132             mov A,#20
-0076 75F000      =1    133             mov B,#0
-                 =1    134             ;acall Wait_mS ;Wait 20 mS
-0079 75A030      =1    135             mov  LCD_data,#00110000B
-007C D292        =1    136             setb LCD_en
-007E C292        =1    137             clr  LCD_en
-                 =1    138
-0080 7406        =1    139             mov A,#6
-0082 75F000      =1    140             mov B,#0
-                 =1    141             ;acall Wait_mS ;Wait 6 mS
-0085 75A038      =1    142             mov  LCD_data,#FUNC_8BIT_2L
-0088 D292        =1    143             setb LCD_en
-008A C292        =1    144             clr  LCD_en
-                 =1    145
-008C 7408        =1    146             mov A,#DISP_OFF
-008E 1199        =1    147             acall LCD_command
-                 =1    148
-0090 740C        =1    149             mov A,#DISP_ON
-0092 1199        =1    150             acall LCD_command
-                 =1    151
-0094 7406        =1    152             mov A,#ENTRY_INC
-0096 1199        =1    153             acall LCD_command
-                 =1    154
-0098 22          =1    155             ret
-                 =1    156     ;----------------------------------------------------------------------
-                 =1    157
+                 =1    126
+                 =1    127     LCD_Init:
+                 =1    128     ;----------------------------------------------------------------------
+006E C290        =1    129             clr LCD_rs
+0070 C291        =1    130             clr LCD_rw
+0072 C292        =1    131             clr LCD_en
+                 =1    132
+0074 7414        =1    133             mov A,#20
+0076 75F000      =1    134             mov B,#0
+                 =1    135             ;acall Wait_mS ;Wait 20 mS
+0079 75A030      =1    136             mov  LCD_data,#00110000B
+007C D292        =1    137             setb LCD_en
+007E C292        =1    138             clr  LCD_en
+                 =1    139
+0080 7406        =1    140             mov A,#6
+0082 75F000      =1    141             mov B,#0
+                 =1    142             ;acall Wait_mS ;Wait 6 mS
+0085 75A038      =1    143             mov  LCD_data,#FUNC_8BIT_2L
+0088 D292        =1    144             setb LCD_en
+008A C292        =1    145             clr  LCD_en
+                 =1    146
+008C 7408        =1    147             mov A,#DISP_OFF
+008E 1199        =1    148             acall LCD_command
+                 =1    149
+0090 740C        =1    150             mov A,#DISP_ON
+0092 1199        =1    151             acall LCD_command
+                 =1    152
+0094 7406        =1    153             mov A,#ENTRY_INC
+0096 1199        =1    154             acall LCD_command
+                 =1    155
+0098 22          =1    156             ret
+                 =1    157     ;----------------------------------------------------------------------
                  =1    158
-                 =1    159     ;======================================================================
-                 =1    160
-                 =1    161     ;Ports used are same as the previous example
-                 =1    162     ;Routine to send command to LCD
-                 =1    163
-                 =1    164     LCD_command:
-0099 F5A0        =1    165              mov   LCD_data,A     ;Move the command to LCD port
-009B C290        =1    166              clr   LCD_rs         ;Selected command register
-009D C291        =1    167              clr   LCD_rw         ;We are writing in instruction register
-009F D292        =1    168              setb  LCD_en         ;Enable H->
-                 =1    169
-00A1 C292        =1    170              clr   LCD_en
-00A3 11CB        =1    171              acall LCD_busy       ;Wait for LCD to process the command
-00A5 22          =1    172              ret                  ;Return from busy routine
-                 =1    173
+                 =1    159
+                 =1    160     ;======================================================================
+                 =1    161
+                 =1    162     ;Ports used are same as the previous example
+                 =1    163     ;Routine to send command to LCD
+                 =1    164
+                 =1    165     LCD_command:
+0099 F5A0        =1    166              mov   LCD_data,A     ;Move the command to LCD port
+009B C290        =1    167              clr   LCD_rs         ;Selected command register
+009D C291        =1    168              clr   LCD_rw         ;We are writing in instruction register
+009F D292        =1    169              setb  LCD_en         ;Enable H->
+                 =1    170
+00A1 C292        =1    171              clr   LCD_en
+00A3 11CB        =1    172              acall LCD_busy       ;Wait for LCD to process the command
+00A5 22          =1    173              ret                  ;Return from busy routine
                  =1    174
-                 =1    175     ;======================================================================
-                 =1    176     ;Ports used are same as the previous example
-                 =1    177     ;Routine to send data (single character) to LCD
-                 =1    178
-                 =1    179     LCD_sendchar:
-00A6 F5A0        =1    180              mov   LCD_data,A     ;Move the command to LCD port
-00A8 D290        =1    181              setb  LCD_rs         ;Selected data register
-00AA C291        =1    182              clr   LCD_rw         ;We are writing
-00AC D292        =1    183              setb  LCD_en         ;Enable H->
-                 =1    184
-00AE C292        =1    185              clr   LCD_en
-00B0 11CB        =1    186              acall LCD_busy       ;Wait for LCD to process the data
-00B2 22          =1    187              ret                  ;Return from busy routine
-                 =1    188
+                 =1    175
+                 =1    176     ;======================================================================
+                 =1    177     ;Ports used are same as the previous example
+                 =1    178     ;Routine to send data (single character) to LCD
+                 =1    179
+                 =1    180     LCD_sendchar:
+00A6 F5A0        =1    181              mov   LCD_data,A     ;Move the command to LCD port
+00A8 D290        =1    182              setb  LCD_rs         ;Selected data register
+00AA C291        =1    183              clr   LCD_rw         ;We are writing
+00AC D292        =1    184              setb  LCD_en         ;Enable H->
+                 =1    185
+00AE C292        =1    186              clr   LCD_en
+00B0 11CB        =1    187              acall LCD_busy       ;Wait for LCD to process the data
+00B2 22          =1    188              ret                  ;Return from busy routine
                  =1    189
                  =1    190
-                 =1    191     LCD_buildchar:
-                 =1    192
-00B3 7440        =1    193             MOV A,#40H
-00B5 1199        =1    194             ACALL LCD_command
-                 =1    195
-00B7 7807        =1    196             MOV R0,#7
-                 =1    197     NEXT_data:
-00B9 E4          =1    198             CLR A
-00BA 93          =1    199             MOVC A,@A+DPTR
-00BB 11A6        =1    200             ACALL LCD_sendchar
-00BD A3          =1    201             INC DPTR
-00BE D8F9        =1    202             DJNZ R0,NEXT_data
-00C0 22          =1    203             RET
-                 =1    204
+                 =1    191
+                 =1    192     LCD_buildchar:
+                 =1    193
+00B3 7440        =1    194             MOV A,#40H
+00B5 1199        =1    195             ACALL LCD_command
+                 =1    196
+00B7 7807        =1    197             MOV R0,#7
+                 =1    198     NEXT_data:
+00B9 E4          =1    199             CLR A
+00BA 93          =1    200             MOVC A,@A+DPTR
+00BB 11A6        =1    201             ACALL LCD_sendchar
+00BD A3          =1    202             INC DPTR
+00BE D8F9        =1    203             DJNZ R0,NEXT_data
+00C0 22          =1    204             RET
                  =1    205
-                 =1    206     ;======================================================================
-                 =1    207     LCD_sendstr:
-                 =1    208
-00C1 E4          =1    209             CLR A
-00C2 93          =1    210             MOVC A,@A+DPTR
-00C3 6005        =1    211             JZ EXIT_sendstr
-00C5 11A6        =1    212             ACALL LCD_sendchar
-00C7 A3          =1    213             INC DPTR
-00C8 80F7        =1    214             JMP LCD_sendstr
-                 =1    215     EXIT_sendstr:
-00CA 22          =1    216             RET
-                 =1    217     ;=======================================================================
-                 =1    218     LCD_busy:
-00CB D2A7        =1    219              setb   LCD_D7        ;Make D7th bit of LCD data port as i/p
-00CD D292        =1    220              setb   LCD_en        ;Make port pin as o/p
-00CF C290        =1    221              clr    LCD_rs        ;Select command register
-00D1 D291        =1    222              setb   LCD_rw        ;we are reading
-                 =1    223     check:
-00D3 C292        =1    224              clr    LCD_en        ;Enable H->
-00D5 E5A0        =1    225              mov    A,LCD_data
-00D7 D292        =1    226              setb   LCD_en
-00D9 20E7F7      =1    227              jb     A.7,check     ;read busy flag again and again till it becomes 0
-00DC 22          =1    228              ret                  ;Return from busy routine
-                 =1    229
-                 =1    230     ;------------------------Subroutines for delay-------------------------
-                 =2    231     INCLUDE delay.inc
-                 =2    232     ;======================================================================
-                 =2    233     ;Library with soubroutnes for delay function no need of hardware timers
-                 =2    234     ;All delay are calculated for 12 MHz Clock frequency
-                 =2    235     ;
-                 =2    236     ;Date: 21.04.2021               Author: S. Banchev
-                 =2    237     ;Source: https://github.com/sbch01/8051/
-                 =2    238     ;======================================================================
-                 =2    239
+                 =1    206
+                 =1    207     ;======================================================================
+                 =1    208     LCD_sendstr:
+                 =1    209
+00C1 E4          =1    210             CLR A
+00C2 93          =1    211             MOVC A,@A+DPTR
+00C3 6005        =1    212             JZ EXIT_sendstr
+00C5 11A6        =1    213             ACALL LCD_sendchar
+00C7 A3          =1    214             INC DPTR
+00C8 80F7        =1    215             JMP LCD_sendstr
+                 =1    216     EXIT_sendstr:
+00CA 22          =1    217             RET
+                 =1    218     ;=======================================================================
+                 =1    219     LCD_busy:
+00CB D2A7        =1    220              setb   LCD_D7        ;Make D7th bit of LCD data port as i/p
+00CD D292        =1    221              setb   LCD_en        ;Make port pin as o/p
+00CF C290        =1    222              clr    LCD_rs        ;Select command register
+00D1 D291        =1    223              setb   LCD_rw        ;we are reading
+                 =1    224     check:
+00D3 C292        =1    225              clr    LCD_en        ;Enable H->
+00D5 E5A0        =1    226              mov    A,LCD_data
+00D7 D292        =1    227              setb   LCD_en
+00D9 20E7F7      =1    228              jb     A.7,check     ;read busy flag again and again till it becomes 0
+00DC 22          =1    229              ret                  ;Return from busy routine
+                 =1    230
+                 =1    231     ;------------------------Subroutines for delay-------------------------
+                 =2    232     INCLUDE delay.inc
+                 =2    233     ;======================================================================
+                 =2    234     ;Library with soubroutnes for delay function no need of hardware timers
+                 =2    235     ;All delay are calculated for 12 MHz Clock frequency
+                 =2    236     ;
+                 =2    237     ;Date: 21.04.2021               Author: S. Banchev
+                 =2    238     ;Source: https://github.com/sbch01/8051/
+                 =2    239     ;======================================================================
                  =2    240
-                 =2    241     ;----------------------------------------------------------------------
-                 =2    242     ; Subroutine wait uS
-                 =2    243     ;----------------------------------------------------------------------
-                 =2    244     Wait_uS: ;loop aprox A value in uS
-00DD 13          =2    245             RRC A ; divide by two loded in A value
-                 =2    246     Wait_uSx2: ;loop aprox A value  x2 in uS
-00DE D5E0FD      =2    247             DJNZ A,$ ;
-00E1 22          =2    248             RET
-                 =2    249     ;----------------------------------------------------------------------
-                 =2    250
-                 =2    251     ;----------------------------------------------------------------------
-                 =2    252     ; Subroutine wait mS
-                 =2    253     ;----------------------------------------------------------------------
-                 =2    254     ;Load A and B register with your delay needs
-                 =2    255     ;A register is low byte digit and B register is high byte register
-                 =2    256     ;Always check value in two register before call subroutine
-                 =2    257     ;Max delay is 65535 mS if A=0xff and B=0xff
-                 =2    258     Wait_mS:
-00E2 05F0        =2    259             INC B
-                 =2    260     Loop_mS:
-00E4 78F9        =2    261             MOV R0,#249
-00E6 D8FE        =2    262             DJNZ R0,$
-00E8 78F9        =2    263             MOV R0,#249
-00EA D8FE        =2    264             DJNZ R0,$
-00EC D5E0F5      =2    265             DJNZ A,Loop_mS
-00EF D5F0F2      =2    266             DJNZ B,Loop_mS
-00F2 22          =2    267             RET
-                       268
-                       269     ORG 0200H
-                       270     ;----------------String constants----------------------------------
-0200 3830353120        271     STR1:DB '8051 is Legend!',0
+                 =2    241
+                 =2    242     ;----------------------------------------------------------------------
+                 =2    243     ; Subroutine wait uS
+                 =2    244     ;----------------------------------------------------------------------
+                 =2    245     Wait_uS: ;loop aprox A value in uS
+00DD 13          =2    246             RRC A ; divide by two loded in A value
+                 =2    247     Wait_uSx2: ;loop aprox A value  x2 in uS
+00DE D5E0FD      =2    248             DJNZ A,$ ;
+00E1 22          =2    249             RET
+                 =2    250     ;----------------------------------------------------------------------
+                 =2    251
+                 =2    252     ;----------------------------------------------------------------------
+                 =2    253     ; Subroutine wait mS
+                 =2    254     ;----------------------------------------------------------------------
+                 =2    255     ;Load A and B register with your delay needs
+                 =2    256     ;A register is low byte digit and B register is high byte register
+                 =2    257     ;Always check value in two register before call subroutine
+                 =2    258     ;Max delay is 65535 mS if A=0xff and B=0xff
+                 =2    259     Wait_mS:
+00E2 05F0        =2    260             INC B
+                 =2    261     Loop_mS:
+00E4 78F9        =2    262             MOV R0,#249
+00E6 D8FE        =2    263             DJNZ R0,$
+00E8 78F9        =2    264             MOV R0,#249
+00EA D8FE        =2    265             DJNZ R0,$
+00EC D5E0F5      =2    266             DJNZ A,Loop_mS
+00EF D5F0F2      =2    267             DJNZ B,Loop_mS
+00F2 22          =2    268             RET
+                       269
+                       270     ORG 0200H
+                       271     ;----------------String constants----------------------------------
+0200 3830353120        272     STR1:DB '8051 is Legend!',0
      6973204C65
      67656E6421
      00
-                       272     ;----------------Custom charter constant---------------------------
-0210 040E0E0E1F        273     BELL:DB 00100b, 01110b, 01110b, 01110b, 11111b, 00000b, 00100b, 00000b
+                       273     ;----------------Custom charter constant---------------------------
+0210 040E0E0E1F        274     BELL:DB 00100b, 01110b, 01110b, 01110b, 11111b, 00000b, 00100b, 00000b
      000400
-                       274             END
+                       275             END
 ASSEMBLY COMPLETE, NO ERRORS FOUND, NO WARNINGS
 
 
