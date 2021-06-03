@@ -1,6 +1,6 @@
 M:main
 F:G$main$0_0$0({2}DF,SV:S),C,0,0,0,0,0
-S:Lmain.main$my_char$1_0$2({1}SC:U),F,0,0
+S:G$my_char$0_0$0({1}SC:U),E,0,0
 S:G$P0$0_0$0({1}SC:U),I,0,0
 S:G$SP$0_0$0({1}SC:U),I,0,0
 S:G$DPL$0_0$0({1}SC:U),I,0,0

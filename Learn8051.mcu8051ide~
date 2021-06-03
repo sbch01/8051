@@ -262,7 +262,7 @@
 		/>
 	</general>
 	<other_options><![CDATA[]]></other_options>
-	<compiler_options><![CDATA[{_title 0 _list 0 _print 0 _nomod 0 max_ihex_rec_length 16 _object 0 _pagelength 0 QUIET 0 _symbols 0 CREATE_SIM_FILE 1 CREATE_BIN_FILE 1 optim_ena 0 _pagewidth 0 WARNING_LEVEL 0 _paging 0 _date 0} 0 {--verbose 1 -i {} --omf-51 0 --columns 0 custom {}} {adf 1} {-L 1 -M 0 custom {} -n 0 -P 0 -A 0 -a 0 -r {} -C 0 -c 0 -s 1 -u 0 -U 0 -w 0 -g MAP -quiet 0 -h 0 -x 0 -cpu 8051 -I 1 -i {}} {ihex 1 adf 1} {--out-fmt-s19 0 --fdollars-in-identifiers 0 --nogcse 0 --nooverlay 1 --no-peep-comments 0 --no-c-code-in-asm 0 --print-search-dirs 0 --nostdlib 0 --cyclomatic 0 --compile-only 0 --peep-asm 0 --nolabelopt 0 --short-is-8bits 0 --profile 0 --noinvariant 0 --no-reg-params 0 --noinduction 1 --out-fmt-ihx 0 --nojtbound 0 --opt-code-size 0 --less-pedantic 0 --no-peep 0 -S 0 --verbose 1 --funsigned-char 0 --xstack 0 --no-xinit-opt 0 --debug 1 --preprocessonly 0 --c1mode 0 -V 1 --float-reent 0 --parms-in-bank1 0 --opt-code-speed 0 --nostdinc 0 --main-return 0 --xram-movc 0 --fommit-frame-pointer 0 --fverbose-asm 0 --int-long-reent 0 --all-callee-saves 0 --stack-probe 0 --noloopreverse 0 --stack-auto 0 --use-stdout 0} {model --model-large standard --std-sdcc89 stack {} custom {}} {--codeseg {} --constseg {} --code-loc {} --stack-size {} --xram-loc {} --lib-path {} --xstack-loc {} --stack-loc {} --data-loc {}} {-l {} -L {} --disable-warning {} -I {}} {-l 1 -A {} -F hex custom {}} {adf 1}]]></compiler_options>
+	<compiler_options><![CDATA[{_title 0 _list 0 _print 0 _nomod 0 max_ihex_rec_length 16 _object 0 _pagelength 0 QUIET 0 _symbols 0 CREATE_SIM_FILE 1 CREATE_BIN_FILE 1 optim_ena 0 _pagewidth 0 WARNING_LEVEL 0 _paging 0 _date 0} 0 {--verbose 1 -i {} --omf-51 0 --columns 0 custom {}} {adf 1} {-L 1 -M 0 custom {} -n 0 -P 0 -A 0 -a 0 -r {} -C 0 -c 0 -s 1 -u 0 -U 0 -w 0 -g MAP -quiet 0 -h 0 -x 0 -cpu 8051 -I 1 -i {}} {ihex 1 adf 1} {--out-fmt-s19 0 --fdollars-in-identifiers 0 --nogcse 0 --nooverlay 1 --no-peep-comments 0 --no-c-code-in-asm 0 --print-search-dirs 0 --nostdlib 0 --nolabelopt 0 --short-is-8bits 0 --cyclomatic 0 --compile-only 0 --peep-asm 0 --profile 0 --noinvariant 0 --no-reg-params 0 --noinduction 1 --out-fmt-ihx 0 --nojtbound 0 --opt-code-size 0 --less-pedantic 0 --no-peep 0 -S 0 --verbose 1 --funsigned-char 0 --xstack 0 --no-xinit-opt 0 --debug 1 --preprocessonly 0 --c1mode 0 -V 1 --float-reent 0 --parms-in-bank1 0 --opt-code-speed 0 --nostdinc 0 --main-return 0 --xram-movc 0 --fommit-frame-pointer 0 --fverbose-asm 0 --int-long-reent 0 --all-callee-saves 0 --stack-probe 0 --noloopreverse 0 --stack-auto 0 --use-stdout 0} {model --model-large standard --std-sdcc89 stack {} custom {}} {--codeseg {} --constseg {} --code-loc {} --stack-size {} --xram-loc {} --lib-path {} --xstack-loc {} --stack-loc {} --data-loc {}} {-l {} -L {} --disable-warning {} -I {}} {-l 1 -A {} -F hex custom {}} {adf 1}]]></compiler_options>
 	<files
 		count="1"
 		current_file="0"
@@ -271,10 +271,10 @@
 		selected_view="0"
 		pwin_orient="horizontal">
 
-		<file name="blink_led.asm" active="no" o_bookmark="0" p_bookmark="0" file_index="0" read_only="0" highlight="0">
+		<file name="delay.inc" active="no" o_bookmark="0" p_bookmark="0" file_index="0" read_only="0" highlight="0">
 			<actual_line value="1"/>
-			<md5_hash value="A3C143C6F6A2617DD0B1134AB6EB009C"/>
-			<path><![CDATA[blink_led_1/]]></path>
+			<md5_hash value="3D7CD46727CE75C55726C0EE684A73B1"/>
+			<path><![CDATA[6_lcd_test/]]></path>
 			<bookmarks>
 				0
 			</bookmarks>
@@ -286,85 +286,10 @@
 			<notes><![CDATA[]]></notes>
 		</file>
 
-		<file name="test_mov.asm" active="no" o_bookmark="0" p_bookmark="0" file_index="0" read_only="0" highlight="0">
-			<actual_line value="31"/>
-			<md5_hash value="49D2B7A0692AD3522ABFD304CD8EA73D"/>
-			<path><![CDATA[mov_test_2/]]></path>
-			<bookmarks>
-				0
-			</bookmarks>
-			<breakpoints>
-				0
-			</breakpoints>
-			<eol value="lf"/>
-			<encoding value="utf-8"/>
-			<notes><![CDATA[]]></notes>
-		</file>
-
-		<file name="test_branch.asm" active="no" o_bookmark="0" p_bookmark="0" file_index="0" read_only="0" highlight="0">
-			<actual_line value="9"/>
-			<md5_hash value="DE843700B9524D60B0196302C47265DA"/>
-			<path><![CDATA[branch_test_3/]]></path>
-			<bookmarks>
-				0
-			</bookmarks>
-			<breakpoints>
-				0
-			</breakpoints>
-			<eol value="lf"/>
-			<encoding value="utf-8"/>
-			<notes><![CDATA[]]></notes>
-		</file>
-
-		<file name="m_and_l_test.asm" active="no" o_bookmark="0" p_bookmark="0" file_index="0" read_only="0" highlight="0">
-			<actual_line value="56"/>
-			<md5_hash value="54771563D87769E95867C3E0158BE79F"/>
-			<path><![CDATA[log_and_math_test_4/]]></path>
-			<bookmarks>
-				0
-			</bookmarks>
-			<breakpoints>
-				0
-			</breakpoints>
-			<eol value="lf"/>
-			<encoding value="utf-8"/>
-			<notes><![CDATA[]]></notes>
-		</file>
-
-		<file name="bintobcd.asm" active="no" o_bookmark="0" p_bookmark="0" file_index="0" read_only="0" highlight="0">
-			<actual_line value="7"/>
-			<md5_hash value="1F71C01998453E6B1191E2FA5CA9A1A6"/>
-			<path><![CDATA[log_and_math_test_4/]]></path>
-			<bookmarks>
-				0
-			</bookmarks>
-			<breakpoints>
-				0
-			</breakpoints>
-			<eol value="lf"/>
-			<encoding value="utf-8"/>
-			<notes><![CDATA[]]></notes>
-		</file>
-
-		<file name="delay.asm" active="no" o_bookmark="0" p_bookmark="0" file_index="0" read_only="0" highlight="0">
-			<actual_line value="15"/>
-			<md5_hash value="0F6A77292C98AF352902116005BEBDF9"/>
-			<path><![CDATA[delay_routines_test_5/]]></path>
-			<bookmarks>
-				0
-			</bookmarks>
-			<breakpoints>
-				0
-			</breakpoints>
-			<eol value="lf"/>
-			<encoding value="utf-8"/>
-			<notes><![CDATA[]]></notes>
-		</file>
-
-		<file name="incl.inc" active="no" o_bookmark="0" p_bookmark="0" file_index="0" read_only="0" highlight="0">
-			<actual_line value="7"/>
-			<md5_hash value="C4F25AF794FF573AB860F718EFCFCCE8"/>
-			<path><![CDATA[delay_routines_test_5/]]></path>
+		<file name="lcd.inc" active="no" o_bookmark="0" p_bookmark="0" file_index="0" read_only="0" highlight="0">
+			<actual_line value="1"/>
+			<md5_hash value="F23F17986A71738B5851A6DF15C40EBA"/>
+			<path><![CDATA[6_lcd_test/]]></path>
 			<bookmarks>
 				0
 			</bookmarks>

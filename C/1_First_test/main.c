@@ -1,15 +1,13 @@
-#include <8052.h>
+#include <at89x52.h>
 
-/*void timer_isr (void) __interrupt (1) __using (1) 
-{} */
+__data __at(0x20) char my_char; 
 
+void main(){
 
-void main(void){
-
-	char my_char;
 	
+		
 		P0 = 0x00;
-		my_char = 'S';
+		my_char = 0x55;
 		
 	 while(1){}
 }

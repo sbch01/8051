@@ -1,0 +1,2 @@
+all:
+	sdcc main.c

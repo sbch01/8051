@@ -128,6 +128,7 @@
 	.globl _DPL
 	.globl _SP
 	.globl _P0
+	.globl _my_char
 ;--------------------------------------------------------
 ; special function registers
 ;--------------------------------------------------------
@@ -385,6 +386,9 @@ _TF2	=	0x00cf
 ; internal ram data
 ;--------------------------------------------------------
 	.area DSEG    (DATA)
+G$my_char$0_0$0==.
+_my_char::
+	.ds 1
 ;--------------------------------------------------------
 ; overlayable items in internal ram 
 ;--------------------------------------------------------
@@ -470,11 +474,9 @@ __sdcc_program_startup:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'main'
 ;------------------------------------------------------------
-;my_char                   Allocated with name '_main_my_char_65536_2'
-;------------------------------------------------------------
 	G$main$0$0 ==.
-	C$main.c$7$0_0$2 ==.
-;	main.c:7: void main(void){
+	C$main.c$5$0_0$1 ==.
+;	main.c:5: void main(){
 ;	-----------------------------------------
 ;	 function main
 ;	-----------------------------------------
@@ -487,16 +489,19 @@ _main:
 	ar2 = 0x02
 	ar1 = 0x01
 	ar0 = 0x00
-	C$main.c$11$1_0$2 ==.
-;	main.c:11: P0 = 0x00;
+	C$main.c$9$1_0$1 ==.
+;	main.c:9: P0 = 0x00;
 	mov	_P0,#0x00
-	C$main.c$14$1_0$2 ==.
-;	main.c:14: while(1){}
+	C$main.c$10$1_0$1 ==.
+;	main.c:10: my_char = 0x55;
+	mov	_my_char,#0x55
+	C$main.c$12$1_0$1 ==.
+;	main.c:12: while(1){}
 00102$:
 	sjmp	00102$
-	C$main.c$15$1_0$2 ==.
-;	main.c:15: }
-	C$main.c$15$1_0$2 ==.
+	C$main.c$13$1_0$1 ==.
+;	main.c:13: }
+	C$main.c$13$1_0$1 ==.
 	XG$main$0$0 ==.
 	ret
 	.area CSEG    (CODE)
