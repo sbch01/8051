@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "8052.h": "c",
-        "at89x52.h": "c"
+        "at89x52.h": "c",
+        "lint.h": "c"
     }
 }

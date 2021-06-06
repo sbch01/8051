@@ -3,7 +3,7 @@
 ; Version 3.8.0 #10562 (Linux)
 ;--------------------------------------------------------
 	.module main
-	.optsdcc -mmcs51 --model-large
+	.optsdcc -mmcs51 --model-small
 	
 ;--------------------------------------------------------
 ; Public variables in this module
@@ -128,6 +128,7 @@
 	.globl _DPL
 	.globl _SP
 	.globl _P0
+	.globl _counter
 	.globl _my_char
 ;--------------------------------------------------------
 ; special function registers
@@ -388,6 +389,8 @@ _TF2	=	0x00cf
 	.area DSEG    (DATA)
 G$my_char$0_0$0 == 0x0020
 _my_char	=	0x0020
+G$counter$0_0$0 == 0x0030
+_counter	=	0x0030
 ;--------------------------------------------------------
 ; overlayable items in internal ram 
 ;--------------------------------------------------------
@@ -474,8 +477,8 @@ __sdcc_program_startup:
 ;Allocation info for local variables in function 'main'
 ;------------------------------------------------------------
 	G$main$0$0 ==.
-	C$main.c$5$0_0$1 ==.
-;	main.c:5: void main(){
+	C$main.c$10$0_0$1 ==.
+;	main.c:10: void main(){
 ;	-----------------------------------------
 ;	 function main
 ;	-----------------------------------------
@@ -488,19 +491,32 @@ _main:
 	ar2 = 0x02
 	ar1 = 0x01
 	ar0 = 0x00
-	C$main.c$9$1_0$1 ==.
-;	main.c:9: P0 = 0x00;
-	mov	_P0,#0x00
-	C$main.c$10$1_0$1 ==.
-;	main.c:10: my_char = 0x55;
-	mov	_my_char,#0x55
 	C$main.c$12$1_0$1 ==.
-;	main.c:12: while(1){}
-00102$:
-	sjmp	00102$
+;	main.c:12: counter = 0x11aa;
+	mov	_counter,#0xaa
+	mov	(_counter + 1),#0x11
 	C$main.c$13$1_0$1 ==.
-;	main.c:13: }
-	C$main.c$13$1_0$1 ==.
+;	main.c:13: P0 = 0x00;
+	mov	_P0,#0x00
+	C$main.c$14$1_0$1 ==.
+;	main.c:14: my_char = 0x55;
+	mov	_my_char,#0x55
+	C$main.c$16$1_0$1 ==.
+;	main.c:16: if (counter==0xffff)	{
+	mov	r6,_counter
+	mov	r7,(_counter + 1)
+	cjne	r6,#0xff,00104$
+	cjne	r7,#0xff,00104$
+	C$main.c$17$2_0$2 ==.
+;	main.c:17: P0 = 0xf1;	
+	mov	_P0,#0xf1
+	C$main.c$19$1_0$1 ==.
+;	main.c:19: while(1){}
+00104$:
+	sjmp	00104$
+	C$main.c$20$1_0$1 ==.
+;	main.c:20: }
+	C$main.c$20$1_0$1 ==.
 	XG$main$0$0 ==.
 	ret
 	.area CSEG    (CODE)
