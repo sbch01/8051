@@ -3,7 +3,8 @@
         {
             "name": "Linux",
             "includePath": [
-                "/usr/share/sdcc/**"
+                "/usr/share/sdcc/**",
+                "${workspaceRoot}**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/sdcc",
