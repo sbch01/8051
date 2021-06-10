@@ -1,6 +1,7 @@
 #include <lint.h>
 #include <8052.h>
-
+//-------------Function declaration------------------------
+void delay (int time);
 //-------------Variable declaration------------------------
 
 //__data -> заделя клетка от вътрешната рам памет
@@ -37,6 +38,16 @@ __code char Version[] = "Ver 2.0";
 //void timer2_isr (void) __interrupt (5) __using (0){	//only 8052
 //}
 
+//=======================================================
+//  CUSTOM FUNCTION
+//=======================================================
+
+void delay (int time){
+
+	while(time!=0){
+		time--;
+	}
+}
 
 //=========================================================
 //			MAIN PROGRAM
@@ -61,6 +72,10 @@ void main(){
 
 	//cycling code here
 	 while(1){
-		 //add some code later
+		
+		P0_0 =! P0_0;
+		delay (100);
+		//P0_0 = 0;
+		//delay(100);
 	 }
 }

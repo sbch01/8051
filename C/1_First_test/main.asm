@@ -3,7 +3,7 @@
 ; Version 3.8.0 #10562 (Linux)
 ;--------------------------------------------------------
 	.module main
-	.optsdcc -mmcs51 --model-large
+	.optsdcc -mmcs51 --model-small
 	
 ;--------------------------------------------------------
 ; Public variables in this module
@@ -133,6 +133,7 @@
 	.globl _str
 	.globl _counter
 	.globl _my_char
+	.globl _delay
 ;--------------------------------------------------------
 ; special function registers
 ;--------------------------------------------------------
@@ -468,8 +469,8 @@ __interrupt_vect:
 	.globl __mcs51_genXINIT
 	.globl __mcs51_genXRAMCLEAR
 	.globl __mcs51_genRAMCLEAR
-	C$main.c$11$1_0$1 ==.
-;	main.c:11: __data char str[10] = "Stoian";
+	C$main.c$12$1_0$5 ==.
+;	main.c:12: __data char str[10] = "Stoian";
 	mov	_str,#0x53
 	mov	(_str + 0x0001),#0x74
 	mov	(_str + 0x0002),#0x6f
@@ -480,8 +481,8 @@ __interrupt_vect:
 	mov	(_str + 0x0007),#0x00
 	mov	(_str + 0x0008),#0x00
 	mov	(_str + 0x0009),#0x00
-	C$main.c$14$1_0$1 ==.
-;	main.c:14: __bit FlagBit = 0;
+	C$main.c$15$1_0$5 ==.
+;	main.c:15: __bit FlagBit = 0;
 ;	assignBit
 	clr	_FlagBit
 	.area GSFINAL (CODE)
@@ -499,15 +500,17 @@ __sdcc_program_startup:
 ;--------------------------------------------------------
 	.area CSEG    (CODE)
 ;------------------------------------------------------------
-;Allocation info for local variables in function 'main'
+;Allocation info for local variables in function 'delay'
 ;------------------------------------------------------------
-	G$main$0$0 ==.
-	C$main.c$44$0_0$1 ==.
-;	main.c:44: void main(){
+;time                      Allocated to registers r6 r7 
+;------------------------------------------------------------
+	G$delay$0$0 ==.
+	C$main.c$45$0_0$3 ==.
+;	main.c:45: void delay (int time){
 ;	-----------------------------------------
-;	 function main
+;	 function delay
 ;	-----------------------------------------
-_main:
+_delay:
 	ar7 = 0x07
 	ar6 = 0x06
 	ar5 = 0x05
@@ -516,42 +519,80 @@ _main:
 	ar2 = 0x02
 	ar1 = 0x01
 	ar0 = 0x00
-	C$main.c$50$1_0$1 ==.
-;	main.c:50: __endasm; //край на асемблерови инструкции
+	mov	r6,dpl
+	mov	r7,dph
+	C$main.c$47$1_0$3 ==.
+;	main.c:47: while(time!=0){
+00101$:
+	mov	a,r6
+	orl	a,r7
+	jz	00104$
+	C$main.c$48$2_0$4 ==.
+;	main.c:48: time--;
+	dec	r6
+	cjne	r6,#0xff,00115$
+	dec	r7
+00115$:
+	sjmp	00101$
+00104$:
+	C$main.c$50$1_0$3 ==.
+;	main.c:50: }
+	C$main.c$50$1_0$3 ==.
+	XG$delay$0$0 ==.
+	ret
+;------------------------------------------------------------
+;Allocation info for local variables in function 'main'
+;------------------------------------------------------------
+	G$main$0$0 ==.
+	C$main.c$55$1_0$5 ==.
+;	main.c:55: void main(){
+;	-----------------------------------------
+;	 function main
+;	-----------------------------------------
+_main:
+	C$main.c$61$1_0$5 ==.
+;	main.c:61: __endasm; //край на асемблерови инструкции
 ;	This is a comment
 	  label:
 	nop
-	C$main.c$52$1_0$1 ==.
-;	main.c:52: FlagBit = 1;
+	C$main.c$63$1_0$5 ==.
+;	main.c:63: FlagBit = 1;
 ;	assignBit
 	setb	_FlagBit
-	C$main.c$54$1_0$1 ==.
-;	main.c:54: counter = 0x11aa;
+	C$main.c$65$1_0$5 ==.
+;	main.c:65: counter = 0x11aa;
 	mov	_counter,#0xaa
 	mov	(_counter + 1),#0x11
-	C$main.c$55$1_0$1 ==.
-;	main.c:55: P0 = 0x00;
+	C$main.c$66$1_0$5 ==.
+;	main.c:66: P0 = 0x00;
 	mov	_P0,#0x00
-	C$main.c$56$1_0$1 ==.
-;	main.c:56: my_char = 0x55;
+	C$main.c$67$1_0$5 ==.
+;	main.c:67: my_char = 0x55;
 	mov	_my_char,#0x55
-	C$main.c$58$1_0$1 ==.
-;	main.c:58: if (counter==0xffff)	{
+	C$main.c$69$1_0$5 ==.
+;	main.c:69: if (counter==0xffff)	{
 	mov	r6,_counter
 	mov	r7,(_counter + 1)
 	cjne	r6,#0xff,00104$
 	cjne	r7,#0xff,00104$
-	C$main.c$59$2_0$2 ==.
-;	main.c:59: P0_0 = 1;	
+	C$main.c$70$2_0$6 ==.
+;	main.c:70: P0_0 = 1;	
 ;	assignBit
 	setb	_P0_0
-	C$main.c$63$1_0$1 ==.
-;	main.c:63: while(1){
+	C$main.c$74$1_0$5 ==.
+;	main.c:74: while(1){
 00104$:
+	C$main.c$76$2_0$7 ==.
+;	main.c:76: P0_0 =! P0_0;
+	cpl	_P0_0
+	C$main.c$77$2_0$7 ==.
+;	main.c:77: delay (100);
+	mov	dptr,#0x0064
+	lcall	_delay
 	sjmp	00104$
-	C$main.c$66$1_0$1 ==.
-;	main.c:66: }
-	C$main.c$66$1_0$1 ==.
+	C$main.c$81$1_0$5 ==.
+;	main.c:81: }
+	C$main.c$81$1_0$5 ==.
 	XG$main$0$0 ==.
 	ret
 	.area CSEG    (CODE)
