@@ -589,8 +589,8 @@ _main:
 ;	main.c:77: P1_0 =! P1_0;
 	cpl	_P1_0
 	C$main.c$78$2_0$7 ==.
-;	main.c:78: delay (100);
-	mov	dptr,#0x0064
+;	main.c:78: delay (50000); //delay about 500mS in 10MHz clock
+	mov	dptr,#0xc350
 	lcall	_delay
 	sjmp	00104$
 	C$main.c$82$1_0$5 ==.

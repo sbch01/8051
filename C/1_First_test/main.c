@@ -75,7 +75,7 @@ void main(){
 		
 		P0_0 =! P0_0;
 		P1_0 =! P1_0;
-		delay (100);
+		delay (50000); //delay about 500mS in 10MHz clock
 		//P0_0 = 0;
 		//delay(100);
 	 }
