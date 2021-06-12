@@ -74,6 +74,7 @@ void main(){
 	 while(1){
 		
 		P0_0 =! P0_0;
+		P1_0 =! P1_0;
 		delay (100);
 		//P0_0 = 0;
 		//delay(100);

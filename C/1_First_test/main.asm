@@ -586,13 +586,16 @@ _main:
 ;	main.c:76: P0_0 =! P0_0;
 	cpl	_P0_0
 	C$main.c$77$2_0$7 ==.
-;	main.c:77: delay (100);
+;	main.c:77: P1_0 =! P1_0;
+	cpl	_P1_0
+	C$main.c$78$2_0$7 ==.
+;	main.c:78: delay (100);
 	mov	dptr,#0x0064
 	lcall	_delay
 	sjmp	00104$
-	C$main.c$81$1_0$5 ==.
-;	main.c:81: }
-	C$main.c$81$1_0$5 ==.
+	C$main.c$82$1_0$5 ==.
+;	main.c:82: }
+	C$main.c$82$1_0$5 ==.
 	XG$main$0$0 ==.
 	ret
 	.area CSEG    (CODE)
